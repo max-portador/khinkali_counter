@@ -1,9 +1,9 @@
 import {Prop, Schema, SchemaFactory} from "@nestjs/mongoose";
 
-export type EventDocument = Event & Document
+export type KhinkaliEventDocument = KhinkaliEvent & Document
 
 @Schema()
-export class Event {
+export class KhinkaliEvent {
     @Prop()
     dateDMY: string;
 
@@ -11,10 +11,10 @@ export class Event {
     count: number;
 
     @Prop()
-    image: Buffer;
+    buffer: Buffer;
 
     @Prop()
-    imageExtention: string;
+    imageName: string;
 }
 
-export const EventSchema = SchemaFactory.createForClass(Event)
+export const KhinkaliEventSchema = SchemaFactory.createForClass(KhinkaliEvent)
