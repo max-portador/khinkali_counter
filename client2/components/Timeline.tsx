@@ -29,7 +29,7 @@ function Timeline() {
     }
 
     return (
-        <div>
+        <>
             <h2>{getTotalDist(active)}</h2>
             <div className={css.wrapper}>
                 <IconButton aria-label="back">
@@ -62,7 +62,7 @@ function Timeline() {
                     <ArrowForwardIosRounded />
                 </IconButton>
             </div>
-        </div>
+        </>
     );
 }
 

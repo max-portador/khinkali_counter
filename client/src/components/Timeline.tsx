@@ -23,7 +23,7 @@ const VALUES = [
 ];
 
 const images = Array(6).fill(null)
-    .map((_, i) => String(require(`../assets/${i + 1}.jpg`)))
+    .map((_, i) => String(require(`../../../client2/public/assets/${i + 1}.jpg`)))
     .map(src =>
         <div style={{
             alignContent: "center",
@@ -64,7 +64,7 @@ const Timeline: FC = () => {
                     }}>
                         { images[value] }
                      </div>
-                {/*<Swiper index={value}/>*/}
+                {/*<FadingSwiper index={value}/>*/}
         </div>
     );
 };

@@ -1,13 +1,14 @@
 import React, {FC, useEffect, useState} from 'react';
-import css from './Swiper.module.css'
+import css from '../../styles/Swiper.module.css'
 import ButtonBackward from "./ButtonBackward";
 import ButtonForeward from "./ButtonForeward";
+import {images} from "../App";
 
 
 const IMG_WIDTH = 700;
 const IMG_HEIGHT = 500;
-const images = Array(6).fill(null)
-    .map((_, i) => String(require(`../../../../client2/public/assets/${i + 1}.jpg`)))
+
+
 
 
 const Swiper: FC = () => {
@@ -41,6 +42,7 @@ const Swiper: FC = () => {
                                  style={{width: IMG_WIDTH, height: IMG_HEIGHT}}>
                                 <img key={src}
                                      src={src}
+                                     className={css.swipable_img}
                                      alt={'photo'}
                                 />
                             </div>)
@@ -49,10 +51,10 @@ const Swiper: FC = () => {
             </div>
 
             {
-                movement !== 0 && <ButtonBackward clickHandler={setCurrentIndex}/>
+                // movement !== 0 && <ButtonBackward clickHandler={setCurrentIndex}/>
             }
             {
-                movement !== getMaxMovement() && <ButtonForeward clickHandler={setCurrentIndex}/>
+                // movement !== getMaxMovement() && <ButtonForeward clickHandler={setCurrentIndex}/>
             }
         </div>)
 

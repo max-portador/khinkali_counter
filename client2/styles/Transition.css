@@ -1,0 +1,140 @@
+/*.ltr-enter-active{*/
+/*    animation: ltr-in 500ms forwards;*/
+/*}*/
+
+/*.ltr-exit-active{*/
+/*    animation: ltr-out 500ms forwards;*/
+/*}*/
+
+/*@keyframes ltr-in {*/
+/*    0%{*/
+/*        opacity: 0;*/
+/*        transform: translateX(-250px);*/
+/*    }*/
+
+/*    100%{*/
+/*        opacity: 1;*/
+/*        transform: translateX(0);*/
+/*    }*/
+/*}*/
+
+
+/*@keyframes ltr-out {*/
+/*    0%{*/
+/*        opacity: 1;*/
+/*        transform: translateX(0);*/
+/*    }*/
+
+/*    100%{*/
+/*        opacity: 0;*/
+/*        transform: translateX(250px);*/
+/*    }*/
+/*}*/
+
+/*.rtl-enter-active{*/
+/*    animation: rtl-in 500ms forwards;*/
+
+/*}*/
+
+/*.rtl-exit-active{*/
+/*    animation: rtl-out 500ms forwards;*/
+/*}*/
+
+/*@keyframes rtl-in {*/
+/*    0%{*/
+/*        opacity: 0;*/
+/*        transform: translateX(250px);*/
+/*    }*/
+
+/*    100%{*/
+/*        opacity: 1;*/
+/*        transform: translateX(0);*/
+/*    }*/
+/*}*/
+
+
+/*@keyframes rtl-out {*/
+/*    0%{*/
+/*        opacity: 1;*/
+/*        transform: translateX(0);*/
+/*    }*/
+
+/*    100%{*/
+/*        opacity: 0;*/
+/*        transform: translateX(-250px);*/
+/*    }*/
+/*}*/
+
+.slide-right-enter{
+    transform: translateX(250px);
+    opacity: 0;
+}
+
+.slide-right-enter-active{
+    transform: translateX(0);
+    opacity: 1;
+    transition: all 500ms linear;
+}
+
+.slide-right-exit{
+    transform: translateX(0px);
+    opacity: 1;
+}
+
+.slide-right-exit-active{
+    transform: translateX(-250px);
+    opacity: 0;
+    transition: all 500ms linear;
+}
+
+.slide-left-enter{
+    transform: translateX(-250px);
+    opacity: 0;
+}
+
+.slide-left-enter-active{
+    transform: translateX(0);
+    opacity: 1;
+    transition: all 500ms linear;
+}
+
+.slide-left-exit{
+    transform: translateX(0px);
+    opacity: 1;
+}
+
+.slide-left-exit-active{
+    transform: translateX(250px);
+    opacity: 0;
+    transition: all 500ms linear;
+}
+
+.pageSlider-exit > img {
+    z-index: 1;
+    border: 2px solid crimson;
+}
+
+.pageSlider-enter > img {
+    z-index: 10;
+}
+
+.pageSlider-enter.left > img {
+    transform: translate3d(100%, 0, 0);
+}
+
+.pageSlider-enter.right > img {
+    transform: translate3d(-100%, 0, 0);
+}
+
+.pageSlider-exit.left > img {
+    transform: translate3d(-100%, 0, 0);
+}
+
+.pageSlider-exit.right > img {
+    transform: translate3d(100%, 0, 0);
+}
+
+.pageSlider-enter.pageSlider-enter-active > img {
+    transform: translate3d(0, 0, 0);
+    transition: all 800ms ease-in-out;
+}
