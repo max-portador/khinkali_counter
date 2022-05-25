@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {FC, useState} from 'react';
 import cn from 'classnames';
 import css from '../styles/Timeline.module.css';
 import { IconButton} from "@mui/material";
@@ -21,11 +21,13 @@ const getTotalDist = (curr: number) => {
     }, 5)
 }
 
-function Timeline() {
-    const [active, setActive] = useState<number>(0)
+const Timeline: FC<PropsType> = ({active, setActive}) => {
 
     const clickHandler = function (index: number) {
-        setActive(index)
+        setActive(([prev, direction]) => {
+            const newDirection = prev - index > 0 ? -1000 : 1000
+            return [index, newDirection]
+        })
     }
 
     return (
@@ -67,3 +69,8 @@ function Timeline() {
 }
 
 export default Timeline;
+
+type PropsType = {
+    active: number,
+    setActive:  React.Dispatch<React.SetStateAction<[number, number]>>,
+}

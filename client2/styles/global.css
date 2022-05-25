@@ -4,7 +4,7 @@
   box-sizing: border-box;
 }
 
-html, body, #app-container {
+html {
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -20,7 +20,6 @@ html, body, #app-container {
 body {
   width: 100%;
   height: 100%;
-  background: #151515;
   overflow: hidden;
   padding: 0;
   margin: 0;
@@ -42,9 +41,8 @@ code {
   background-color: white;
 }
 
-
 .example-container {
-  width: 50vw;
+  width: 80vw;
   height: 50vh;
   position: relative;
   display: flex;
@@ -52,11 +50,20 @@ code {
   align-items: center;
 }
 
+.galleryImage{
+  position: absolute;
+  max-width: 100vw;
+  object-fit: scale-down;
+  width: 90%;
+  height: 90%
+}
+
 .next,
 .prev {
   top: calc(50% - 20px);
   position: absolute;
   background: white;
+  border: 1px solid #383838;
   border-radius: 30px;
   width: 40px;
   height: 40px;
@@ -77,11 +84,6 @@ code {
 .prev {
   left: 10px;
   transform: scale(-1);
-}
-
-img {
-  position: absolute;
-  max-width: 100vw;
 }
 
 .refresh {

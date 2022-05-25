@@ -2,6 +2,11 @@ import Head from "next/head";
 import css from '../styles/MainLayout.module.css'
 import {Container} from "@mui/material";
 import React from "react";
+import styled from "styled-components";
+
+const MainContainer = styled(Container)`
+
+`
 
 
 const MainLayout: React.FC<Props> = ({title, description, keywords, children}) => {
