@@ -4,6 +4,7 @@ import ImageGallery from "./ImageGallery";
 import {NextThunkDispatch, wrapper} from "../store";
 import {fetchEvents} from "../store/reducers/eventsReducer";
 
+
 export const images = Array(6).fill(null)
     .map((_, i) => `/assets/${i + 1}.jpg`)
 

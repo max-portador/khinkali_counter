@@ -1,24 +1,16 @@
-import React, {FC} from 'react';
+import React, {useState} from 'react';
 import styled from "styled-components";
 import {wrap} from "popmotion";
 import {images} from "./App";
 import {AnimatePresence, motion} from "framer-motion";
 
 const Container = styled.div`
-  width: 90vw;
-  height: 50vh;
+  width: 100vw;
+  height: 100vh;
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
-`
-
-const GalleryImage = styled(motion.img)`
-  position: absolute;
-  max-width: 100vw;
-  object-fit: scale-down;
-  width: 90%;
-  height: 90%
+  aligh-items: center
 `
 
 const variants = {
@@ -45,14 +37,21 @@ const variants = {
     }
 }
 
-const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => {
+const ImageGallery = () => {
 
-    const imageIndex = wrap(0, images.length, active)
+    const [[image, direction], setPage] = useState<[number, number]>([0, 0])
 
-    return (<div className='example-container'>
+    const imageIndex = wrap(0, images.length, image)
+
+    const paginate = (newDirection: number) => {
+        setPage([image + newDirection, newDirection]);
+    }
+
+
+    return (<div className="example-container">
             <AnimatePresence initial={false} custom={direction}>
                 <motion.img
-                    key={active}
+                    key={image}
                     src={images[imageIndex]}
                     custom={direction}
                     variants={variants}
@@ -63,24 +62,16 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => 
                         x: {type: 'spring', stiffness: 300, damping: 30},
                         opacity: {duration: 0.2}
                     }}
-                    className='galleryImage'
+                    style={{objectFit: 'cover', width: '90%', height:'90%'}}
                 />
             </AnimatePresence>
-
-            {active < images.length - 1 &&
-                <div className="next"
-                        onClick={() => paginate(1)}>
+            <div className="next" onClick={() => paginate(1)}>
                 {"‣"}
-            </div>}
-
-            {active > 0 &&
-                <div className="prev"
-                     onClick={() => paginate(-1)}>
-                    {"‣"}
-                </div>
-            }
-
-        </div>
+            </div>
+            <div className="prev" onClick={() => paginate(-1)}>
+                {"‣"}
+            </div>
+    </div>
 
 
 )
@@ -88,10 +79,3 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => 
 };
 
 export default ImageGallery;
-
-type PropsType = {
-    active: number,
-    direction: number,
-    setEvent:  React.Dispatch<React.SetStateAction<[number, number]>>,
-    paginate: (newDirection: number) => void
-}
