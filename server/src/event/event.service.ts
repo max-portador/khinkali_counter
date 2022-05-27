@@ -18,19 +18,19 @@ export class EventService{
         })
 
         return {
-            dateDMY: event.dateDMY,
-            count: event.count,
+            date: event.date,
+            amount: event.amount,
             imageName: event.imageName,
         }
     }
 
     async getAll():Promise<EventWithId[]>{
-        const events = await this.khinkaliEventModel.find()
+        const events = await this.khinkaliEventModel.find().sort('dateDMY')
         this.fileService.createIfNotExists(events)
         return events.map( event => ({
             _id: event._id,
-            dateDMY: event.dateDMY,
-            count: event.count,
+            date: event.date,
+            amount: event.amount,
             imageName: event.imageName,
         }))
     }
@@ -43,8 +43,8 @@ export class EventService{
 
             event.buffer = image.buffer
             event.imageName = event.imageName.split(".").shift() + '.' + extention
-            event.dateDMY = dto.dateDMY
-            event.count = dto.count
+            event.date = dto.date
+            event.amount = dto.amount
 
             this.fileService.createFile(event.imageName, image.buffer)
 
@@ -64,8 +64,8 @@ export class EventService{
 }
 
 export type EventWithoutBuffer = {
-    dateDMY: string,
-    count: number,
+    date: Date,
+    amount: number,
     imageName: string
 }
 

@@ -1,59 +1,29 @@
 import React, {useEffect, useState, DragEvent} from 'react';
 import MainLayout from "../layout/MainLayout";
-import {Button, FormControl, TextField} from "@mui/material";
+import {Button, FormControl, TextField, Typography} from "@mui/material";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import styled from "styled-components";
 import FileUpload from "../components/FileUpload";
-
-const Form = styled(FormControl)`
-  width: 600px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-content: center;
-`
-
-const DropArea = styled.div` 
-  position: relative;
-  width: 30vw;
-  height: 50vh;
-  object-fit: scale-down;
-  background: rgba(169, 169, 169, 0.34);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px;
-  border-radius: 10px;
-`
-
-const HContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-content: center;
-`
-
-const VContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-content: center;
-`
+import DropArea from "../components/DropArea";
+import {eventsAPI} from "../api/eventsApi";
+import {useRouter} from "next/router";
 
 const CreateEvent = () => {
-    const [value, setValue] = useState<Date>(new Date());
+    const router = useRouter()
+
+    const [eventDate, setEventDate] = useState<Date>(new Date());
     const [amount, setAmount] = useState<number>(1)
-    const [picture, setPicture] = useState<Blob | MediaSource | null>(null)
+    const [picture, setPicture] = useState<Blob | null>(null)
     const [src, setSrc] = useState<string | null>(null)
-    const [dragEnter, setDragEnter] = useState(false);
 
     useEffect(() => {
         if (picture) {
             setSrc(URL.createObjectURL(picture))
+        } else {
+            setSrc(null)
         }
-
     }, [picture])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,28 +31,13 @@ const CreateEvent = () => {
         setAmount(val < 1 ? 1 : val)
     }
 
-    const dragEnterHandler = (event: DragEvent<HTMLDivElement> ) => {
-        event.preventDefault()
-        event.stopPropagation()
-        setDragEnter(true)
-    }
-
-    const dragLeaveHandler = (event: DragEvent<HTMLDivElement> ) => {
-        event.preventDefault()
-        event.stopPropagation()
-        setDragEnter(false)
-    }
-
-    const dropHandler = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault()
-        event.stopPropagation()
-        const files = event.dataTransfer.files
-
-        if (files?.length){
-            setPicture(files[0])
-        }
-
-        setDragEnter(false)
+    const onSubmit = async () => {
+        const formData = new FormData()
+        formData.append('amount', String(amount))
+        formData.append('image', picture)
+        formData.append('date', String(eventDate))
+        await eventsAPI.create(formData)
+        router.push('/')
     }
 
     const formats = {
@@ -92,57 +47,80 @@ const CreateEvent = () => {
 
     return (
         <MainLayout>
-            <HContainer style={{border: '1px solid black', borderRadius: 10}}>
+            <Form style={{border: '1px solid black', borderRadius: 10}}>
                 <VContainer>
-                    <Form>
+                    <HContainer style={{gap: 10}}>
                         <TextField
                             id="count"
                             value={amount}
                             type='number'
                             onChange={handleChange}
                             variant="outlined"
-                            label="Количество хинкалей"
-                            color="success"
+                            label="Количество "
+                            color="primary"
                         />
-                        <LocalizationProvider dateAdapter={AdapterDateFns} color="success" dateFormats={formats}>
-
+                        <FileUpload accept={'image/*'} setFile={setPicture}>
+                            <Button variant="outlined" sx={{fontSize: '2vh', lineHeight: '5vh'}}  color='primary'>
+                                {
+                                    picture
+                                        ? <Typography>Изменить изображение</Typography>
+                                        : <Typography>Загрузите изображение</Typography>
+                                }
+                            </Button>
+                        </FileUpload>
+                        <LocalizationProvider dateAdapter={AdapterDateFns} dateFormats={formats}>
                             <DatePicker
-
                                 label="Дата"
-
-                                value={value}
+                                value={eventDate}
                                 onChange={(newValue) => {
-                                    setValue(newValue);
+                                    setEventDate(newValue);
                                 }}
-                                renderInput={(params) => <TextField {...params}
-                                                                    color="success"
-                                />}
+                                renderInput={(params) =>
+                                    <TextField {...params}
+                                    />}
                             />
                         </LocalizationProvider>
-                    </Form>
-                    <FileUpload accept={'image/*'} setFile={setPicture} >
-                        <Button variant="outlined" color='success'>Загрузите файл</Button>
-                    </FileUpload>
+                    </HContainer>
                 </VContainer>
-                <DropArea
-                    onDragEnter={dragEnterHandler}
-                    onDragLeave={dragLeaveHandler}
-                    onDragOver={dragEnterHandler}
-                    onDrop={dropHandler}
-                >
-                    {
-                        src ? <img id='photo' src={src} alt={'photo here'} className='galleryImage'/>
-                            : <div>Перетащите файлы сюда</div>
-                    }
-                </DropArea>
-            </HContainer>
+                <VContainer>
+                    <DropArea src={src} setPicture={setPicture}/>
+                </VContainer>
+                <HContainer>
+                    <SubmitButton disabled={ !picture } onClick={onSubmit}>Отправить</SubmitButton>
+                </HContainer>
 
-
-
-
+            </Form>
 
         </MainLayout>
     );
 };
 
 export default CreateEvent;
+
+const Form = styled(FormControl)`
+  display: flex;
+  width: 60vw;
+  flex-direction: column;
+  justify-content: space-around;
+  align-content: center;
+  padding: 20px;
+`
+
+const HContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`
+
+const VContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
+`
+
+const SubmitButton = styled((props) => <Button variant={"contained"} {...props}/> )`
+  margin-top: 10px;
+  
+`

@@ -1,4 +1,4 @@
 export class CreateEventDto {
-    readonly dateDMY;
-    readonly count;
+    readonly date: Date;
+    readonly amount: number;
 }

@@ -5,10 +5,10 @@ export type KhinkaliEventDocument = KhinkaliEvent & Document
 @Schema()
 export class KhinkaliEvent {
     @Prop()
-    dateDMY: string;
+    date: Date;
 
     @Prop()
-    count: number;
+    amount: number;
 
     @Prop()
     buffer: Buffer;
