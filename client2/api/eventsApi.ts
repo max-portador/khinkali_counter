@@ -12,7 +12,7 @@ export const eventsAPI = {
 
     },
 
-    create: async(formData: FormData): Promise<number> => {
+    create: async(formData: FormData): Promise<IEvent> => {
 
         try {
             const response = await instance.post<IEvent>('/events', formData,
@@ -21,7 +21,7 @@ export const eventsAPI = {
                         'Content-Type': 'multipart/form-data'
                     }
                 })
-            return response.status
+            return response.data
         }
         catch (e) {
             console.log(e, 'Произошла ошибка при создании события')

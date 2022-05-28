@@ -1,6 +1,6 @@
 import React, {FC, useEffect, useState} from "react";
 import {StatusCode} from "../types/response";
-import {Alert, Snackbar} from "@mui/material";
+import {Alert, Slide, SlideProps, Snackbar} from "@mui/material";
 
 
 export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen, status}) => {
@@ -28,18 +28,32 @@ export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen
         setAlertIsOpen(false);
     };
 
-    return <Snackbar open={alertIsOpen} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity={alertProps.severity} sx={{width: '100%'}}>
+
+
+
+    return <Snackbar anchorOrigin={{vertical:'top', horizontal: 'right'}}
+                     TransitionComponent={TransitionUp}
+                     open={alertIsOpen}
+                     autoHideDuration={6000}
+                     onClose={handleClose}>
+        <Alert onClose={handleClose} severity={alertProps.severity} sx={{width: '100%',
+            borderWidth: '1px',
+            borderStyle: 'solid',
+            borderColor: alertProps.severity === AlertSeverity.SUCSESS ? 'darkgreen' : 'darkred'
+        }
+        }>
             {alertProps.message}
         </Alert>
     </Snackbar>
 }
+
+
+
 type NotificationProps = {
     alertIsOpen: boolean,
     setAlertIsOpen: Function,
     status: number
 }
-
 
 type AlertPropsType = {
     severity: AlertSeverity
@@ -55,3 +69,9 @@ enum AlertMessage {
     'SUCSESS' = "Событие успешно сохранено",
     "ERROR" = "Произошла ошибка во время сохранения события"
 }
+
+function TransitionUp(props: TransitionProps) {
+    return <Slide {...props} direction="up"/>;
+}
+
+type TransitionProps = Omit<SlideProps, 'direction'>;

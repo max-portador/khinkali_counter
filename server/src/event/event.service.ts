@@ -25,7 +25,7 @@ export class EventService{
     }
 
     async getAll():Promise<EventWithId[]>{
-        const events = await this.khinkaliEventModel.find()
+        const events = await this.khinkaliEventModel.find().sort('date')
         this.fileService.createIfNotExists(events)
         return events.map( event => ({
             _id: event._id,

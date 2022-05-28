@@ -1,6 +1,6 @@
 export interface IEvent{
     _id: string;
-    dateDMY: Date;
+    date: Date;
     amount: number;
     imageName: string;
 }

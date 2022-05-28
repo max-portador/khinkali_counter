@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import MainLayout from "../layout/MainLayout";
 import {Button, Stack, TextField} from "@mui/material";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
@@ -31,10 +31,10 @@ const CreateEvent = () => {
         formData.append('image', picture)
         formData.append('date', String(eventDate))
 
-        let status = await eventsAPI.create(formData)
+        let event = await eventsAPI.create(formData)
 
-        setStatus(status)
-        if (status === StatusCode.OK) {
+        setStatus(event ? StatusCode.OK : 500)
+        if (event) {
             setPicture(null)
         }
 
