@@ -8,7 +8,7 @@ const FileUpload:FC<FileUploadProps> = ({accept, children, setFile}) => {
     return (
         <div
             onClick={() => {ref.current.click()}}
-            style={{display: 'flex', alignSelf: 'center'}}
+            style={{display: 'flex', alignSelf: 'center', height: "100%"}}
         >
             <input
                 type="file"
@@ -25,7 +25,7 @@ const FileUpload:FC<FileUploadProps> = ({accept, children, setFile}) => {
 
 export default FileUpload;
 
-interface FileUploadProps {
+export interface FileUploadProps {
     setFile: Function;
     accept: string;
     children?: React.ReactNode;

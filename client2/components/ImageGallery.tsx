@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import styled from "styled-components";
 import {wrap} from "popmotion";
-import {images} from "./App";
+import {images} from "./HomePage";
 import {AnimatePresence, motion} from "framer-motion";
 
 const Container = styled.div`

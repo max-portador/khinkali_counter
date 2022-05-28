@@ -1,10 +1,14 @@
-import React, {DragEvent, FC} from 'react';
+import React, {DragEvent, FC, useEffect, useState} from 'react';
 import styled from "styled-components";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import {Typography} from "@mui/material";
 
 
-const DropArea: FC<PropsType> = ({setPicture, src}) => {
+const DropArea: FC<PropsType> = ({setPicture, picture}) => {
+
+    const createSrc = (picture: Blob) => {
+            return URL.createObjectURL(picture)
+        }
 
     const dragHandler = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault()
@@ -31,13 +35,12 @@ const DropArea: FC<PropsType> = ({setPicture, src}) => {
             onDragOver={dragHandler}
             onDrop={dropHandler}
         >
-
             {
-                src ? <>
-                        <UploadedImg src={src} className='galleryImage'/>
-                        <img src={src} alt={'photo here'} className='galleryImage'/>
+                picture ? <>
+                        <UploadedImg src={createSrc(picture)} className='galleryImage'/>
+                        <img src={createSrc(picture)} alt={'photo here'} className='galleryImage'/>
                     </>
-                    : <Typography>Перетащите изображения сюда</Typography>
+                    : <Typography>Или перетащите изображения сюда</Typography>
             }
             <Clear onClick={() => setPicture(null)}/>
         </Container>
@@ -49,7 +52,7 @@ export default DropArea;
 
 
 type PropsType = {
-    src: string,
+    picture: Blob | null,
     setPicture: React.Dispatch<React.SetStateAction<Blob | MediaSource>>
 }
 
@@ -59,7 +62,6 @@ const Container = styled.div`
   min-height: 50vh;
   object-fit: scale-down;
   display: flex;
-  margin-top: 10px;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
@@ -82,7 +84,7 @@ const UploadedImg = styled.img`
 `
 
 const Clear = styled((props) => <HighlightOffIcon {...props} fontSize='large' color='error'/>)`
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 `

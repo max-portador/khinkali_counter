@@ -1,10 +1,10 @@
 import React from 'react';
-import App from "../components/App";
+import HomePage from "../components/HomePage";
 import MainLayout from "../layout/MainLayout";
 
 const Index = () => {
     return <MainLayout>
-        <App/>
+        <HomePage/>
     </MainLayout>
 
 }
