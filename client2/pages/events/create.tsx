@@ -1,15 +1,15 @@
 import React, {useState} from 'react';
-import MainLayout from "../layout/MainLayout";
+import MainLayout from "../../layout/MainLayout";
 import {Button, Stack, TextField} from "@mui/material";
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import styled from "styled-components";
-import DropArea from "../components/DropArea";
-import {eventsAPI} from "../api/eventsApi";
-import {ImageFileUpload} from "../components/FileUploaders/image_file_upload";
-import {StatusCode} from "../types/response";
-import {Notification} from "../components/Notification";
+import DropArea from "../../components/DropArea";
+import {eventsAPI} from "../../api/eventsApi";
+import {ImageFileUpload} from "../../components/FileUploaders/image_file_upload";
+import {StatusCode} from "../../types/response";
+import {Notification} from "../../components/Notification";
 
 const CreateEvent = () => {
 

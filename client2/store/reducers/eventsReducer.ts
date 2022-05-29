@@ -21,7 +21,7 @@ const eventsReducer = (state = initialState, action: EventsActionsType): EventsS
 }
 
 
-const eventsActions = {
+export const eventsActions = {
     getEvents: (payload: IEvent[]) => ({
         type: EventsActionsTypeEnum.GET_EVENTS, payload
     } as const),

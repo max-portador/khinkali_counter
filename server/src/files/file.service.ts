@@ -5,7 +5,7 @@ import * as fs from "fs";
 
 @Injectable()
 export class FileService{
-    filepath = path.resolve(__dirname, '..', '..', 'uploads')
+    filepath = path.resolve(__dirname, '..', 'static')
 
     createIfNotExists(events: KhinkaliEvent[]): void{
 
@@ -33,7 +33,7 @@ export class FileService{
             }
         }
         catch (e) {
-            console.log(e, 'Error on file removing from filesysytem')
+            console.log(e, 'Error on file removing from filesystem')
         }
     }
 }

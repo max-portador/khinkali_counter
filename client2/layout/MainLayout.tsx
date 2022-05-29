@@ -1,12 +1,7 @@
 import Head from "next/head";
-import css from '../styles/MainLayout.module.css'
-import {Container} from "@mui/material";
 import React from "react";
 import styled from "styled-components";
-
-const MainContainer = styled(Container)`
-
-`
+import Navbar from "../components/Navbar";
 
 
 const MainLayout: React.FC<Props> = ({title, description, keywords, children}) => {
@@ -27,9 +22,10 @@ const MainLayout: React.FC<Props> = ({title, description, keywords, children}) =
                     name='viewport'
                     content='width=device-width, initial-scale=1'/>
             </Head>
-            <Container className={css.container} >
+            <Navbar/>
+            <MainContainer>
                 {children}
-            </Container>
+            </MainContainer>
         </>
     );
 };
@@ -46,3 +42,11 @@ type Props = {
     keywords?: string,
 
 }
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-left: 240px;
+`
