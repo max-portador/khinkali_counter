@@ -3,7 +3,7 @@ import HomePage from "../components/HomePage";
 import MainLayout from "../layout/MainLayout";
 
 const Index = () => {
-    return <MainLayout>
+    return <MainLayout marginLeft={0}>
         <HomePage/>
     </MainLayout>
 

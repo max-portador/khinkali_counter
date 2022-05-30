@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Navbar from "../components/Navbar";
 
 
-const MainLayout: React.FC<Props> = ({title, description, keywords, children}) => {
+const MainLayout: React.FC<Props> = ({title, description, keywords, children, marginLeft=100}) => {
     return (
         <>
             <Head>
@@ -23,7 +23,7 @@ const MainLayout: React.FC<Props> = ({title, description, keywords, children}) =
                     content='width=device-width, initial-scale=1'/>
             </Head>
             <Navbar/>
-            <MainContainer>
+            <MainContainer marginLeft={marginLeft}>
                 {children}
             </MainContainer>
         </>
@@ -40,13 +40,15 @@ type Props = {
     title?: string,
     description?: string,
     keywords?: string,
+    marginLeft?: number
 
 }
 
-const MainContainer = styled.div`
+const MainContainer = styled.div<{marginLeft: number}>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-left: 240px;
+  margin-left: ${props => props.marginLeft + 'px'};
+  margin-top: 90px;
 `

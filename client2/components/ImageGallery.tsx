@@ -5,8 +5,7 @@ import {images} from "./HomePage";
 import {AnimatePresence, motion} from "framer-motion";
 
 const Container = styled.div`
-  width: 90vw;
-  height: 50vh;
+  height: calc(100vh - 90px - 120px);;
   position: relative;
   display: flex;
   justify-content: center;
@@ -15,10 +14,9 @@ const Container = styled.div`
 
 const GalleryImage = styled(motion.img)`
   position: absolute;
-  max-width: 100vw;
   object-fit: scale-down;
-  width: 90%;
-  height: 90%
+  width: 50%;
+  height: 100%
 `
 
 const variants = {
@@ -26,7 +24,6 @@ const variants = {
         return {
             x: direction > 0 ? 1000 : -1000,
             opacity: 0,
-
         }
     },
 
@@ -49,7 +46,7 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => 
 
     const imageIndex = wrap(0, images.length, active)
 
-    return (<div className='example-container'>
+    return (<Container className='example-container'>
             <AnimatePresence initial={false} custom={direction}>
                 <motion.img
                     key={active}
@@ -80,7 +77,7 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => 
                 </div>
             }
 
-        </div>
+        </Container>
 
 
 )

@@ -1,7 +1,7 @@
-import React, {FC, useState} from 'react';
+import React, {FC} from 'react';
 import cn from 'classnames';
 import css from '../styles/Timeline.module.css';
-import { IconButton} from "@mui/material";
+import {IconButton} from "@mui/material";
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import {ArrowForwardIosRounded} from "@mui/icons-material";
 
