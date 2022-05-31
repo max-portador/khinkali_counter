@@ -21,7 +21,7 @@ const EventList = () => {
                     </Box>
                     <Grid container justifyContent='center' gap={7} mb={5}>
                         {
-                            events.map(event =>  <EvenCard event={event}/>)
+                            events.map(event =>  <EvenCard key={event._id} event={event}/>)
                         }
                     </Grid>
 

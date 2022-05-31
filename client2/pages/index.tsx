@@ -6,7 +6,6 @@ const Index = () => {
     return <MainLayout marginLeft={0}>
         <HomePage/>
     </MainLayout>
-
 }
 
 

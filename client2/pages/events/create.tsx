@@ -1,15 +1,13 @@
 import React, {useState} from 'react';
 import MainLayout from "../../layout/MainLayout";
 import {Button, Stack, TextField} from "@mui/material";
-import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
-import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import styled from "styled-components";
 import DropArea from "../../components/DropArea";
 import {eventsAPI} from "../../api/eventsApi";
 import {ImageFileUpload} from "../../components/FileUploaders/image_file_upload";
 import {StatusCode} from "../../types/response";
 import {Notification} from "../../components/Notification";
+import StyledDatePicker from "../../components/StyledDatePicker";
 
 const CreateEvent = () => {
 
@@ -42,11 +40,6 @@ const CreateEvent = () => {
 
     }
 
-    const formats = {
-        normalDate: "dd.MM.yyyy",
-        keyboardDate: "dd.MM.yyyy",
-    };
-
     return (
         <MainLayout>
             <Form direction={"column"} spacing={2}>
@@ -60,18 +53,7 @@ const CreateEvent = () => {
                             color="primary"
                         />
                         <ImageFileUpload picture={picture} setPicture={setPicture}/>
-                        <LocalizationProvider dateAdapter={AdapterDateFns} dateFormats={formats}>
-                            <DatePicker
-                                label="Дата"
-                                value={eventDate}
-                                onChange={(newValue) => {
-                                    setEventDate(newValue);
-                                }}
-                                renderInput={(params) =>
-                                    <TextField {...params}
-                                    />}
-                            />
-                        </LocalizationProvider>
+                        <StyledDatePicker eventDate={eventDate} setEventDate={setEventDate}/>
                     </CenteredStack>
                 <DropArea picture={picture} setPicture={setPicture}/>
                 <SubmitButton disabled={!picture} onClick={onSubmit}>Отправить</SubmitButton>
