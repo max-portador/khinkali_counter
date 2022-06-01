@@ -35,9 +35,7 @@ const CreateEvent = () => {
         if (event) {
             setPicture(null)
         }
-
         setAlertIsOpen(true)
-
     }
 
     return (
