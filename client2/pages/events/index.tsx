@@ -5,6 +5,7 @@ import {NextThunkDispatch, wrapper} from "../../store";
 import {fetchEvents} from "../../store/reducers/eventsReducer";
 import {useTypedSelectors} from "../../hooks/useTypedSelectors";
 import EvenCard from "../../components/EvenCard";
+import {sortEventByDate} from "../../utils/dateHelper";
 
 
 const EventList = () => {
@@ -21,7 +22,9 @@ const EventList = () => {
                     </Box>
                     <Grid container justifyContent='center' gap={7} mb={5}>
                         {
-                            events.map(event =>  <EvenCard key={event._id} event={event}/>)
+                            events
+                                .sort(sortEventByDate)
+                                .map(event =>  <EvenCard key={event._id} event={event}/>)
                         }
                     </Grid>
 
