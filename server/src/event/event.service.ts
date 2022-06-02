@@ -1,4 +1,4 @@
-import {Injectable} from "@nestjs/common";
+import {HttpException, HttpStatus, Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {KhinkaliEvent, KhinkaliEventDocument} from "./schemas/event.schema";
 import {CreateEventDto} from "./dto/create-event.dto";
@@ -35,23 +35,23 @@ export class EventService{
         }))
     }
 
-    async update(dto: CreateEventDto, _id: Types.ObjectId, image: Express.Multer.File){
-        const extention = image.originalname.split(".").pop()
+    async update(dto: CreateEventDto, _id: Types.ObjectId, image: Express.Multer.File, imageName: string){
+
         const event = await this.khinkaliEventModel.findById(_id)
         if (event) {
-            this.fileService.deleteFile(event.imageName)
+            if (image) {
+                this.fileService.deleteFile(event.imageName)
+                event.imageName = imageName
+                this.fileService.createFile(imageName, image.buffer)
+            }
 
-            event.buffer = image.buffer
-            event.imageName = event.imageName.split(".").shift() + '.' + extention
             event.date = dto.date
             event.amount = dto.amount
 
-            this.fileService.createFile(event.imageName, image.buffer)
-
             await event.save()
-            return event._id
+            return event
         }
-        return "Не удалось найти в базе данных"
+        throw new HttpException("Не удалось найти в базе данных", HttpStatus.NO_CONTENT);
     }
 
     async delete(id: Types.ObjectId): Promise<Types.ObjectId> {

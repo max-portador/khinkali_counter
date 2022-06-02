@@ -1,7 +1,7 @@
-import React, {ChangeEvent, FC} from 'react';
+import React, {ChangeEvent, FC, useState} from 'react';
 import {Field, Form, Formik} from "formik";
 import {URL} from "../api/baseApi";
-import {Button, Dialog, Grid, Stack, TextField} from "@mui/material";
+import {Button, Dialog, Grid, LinearProgress, Stack, TextField} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
@@ -10,20 +10,42 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DropArea from "./DropArea";
 import {StyledCard} from "./common/styled";
 import {IEvent} from "../types/event";
+import {useActions} from "../hooks/useActions";
+import {Box} from "@mui/system";
 
 const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
+
+    const {updateEvent} = useActions();
+    const [isUpdating, setIsUpdating] = useState(false)
 
     const formats = {
         normalDate: "dd.MM.yyyy",
         keyboardDate: "dd.MM.yyyy",
     };
 
-    const submitHandler = async (values) => {
-        console.table(values)
+    const submitHandler = async (values: FormValues) => {
+        const {date, amount, image} = values
+        let formData = new FormData();
+
+        formData.append('_id', event._id)
+        formData.append('date', date);
+        formData.append('amount', String(amount));
+        if (typeof image !== 'string'){
+            formData.append('image', image)
+        }
+
+        setIsUpdating(true)
+        let result = await updateEvent(formData)
+        setIsUpdating(false)
+
         setIsOpen(false)
+
+
     }
     return (
         <Dialog maxWidth='xl' open={isOpen} onClose={() => setIsOpen(false)}>
+
+
             <Formik initialValues={{
                 date: event.date,
                 amount: event.amount,
@@ -43,6 +65,7 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
                                         <Field name='date' id='date'
                                                label='Дата'
                                                min={1}
+                                               value={values.date}
                                                component={DatePicker}
                                                onChange={(val) => {
                                                    setFieldValue('date', val)
@@ -85,7 +108,22 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
                                         Отмена
                                     </Button>
                                 </Stack>
+                                <Grid container
+                                      position={'relative'}
+                                      bottom={'-10px'}
+                                      justifyContent={'center'}
+                                >
+                                    <Box sx={{ width: '90%', height: 10 }}>
+                                        { isUpdating &&
+                                            <LinearProgress />
+                                        }
+                                    </Box>
+                                </Grid>
+
+
+
                             </Stack>
+
                             <Grid container mt={2} mb={2}>
                                 <Field picture={values.image}
                                        id='image' name='image'
@@ -111,4 +149,10 @@ type PropsType = {
     isOpen: boolean,
     setIsOpen: Function,
     event: IEvent,
+}
+
+type FormValues = {
+    date: string,
+    amount: number,
+    image: string | Blob
 }

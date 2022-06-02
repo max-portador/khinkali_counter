@@ -34,9 +34,14 @@ export class EventController{
     @UseInterceptors(FilesInterceptor('image'))
     update(@UploadedFiles() files: Express.Multer.File[],
            @Body() dto: CreateEventDto, @Body() _id: Types.ObjectId){
-        const image = files[0]
+        const image = files.length ? files[0] : null
+        let imageName;
+        if (image) {
+            const extention = image.originalname.split(".").pop()
+            imageName = v4() + '.' + extention
+        }
 
-        this.eventService.update(dto, _id, image)
+        return this.eventService.update(dto, _id, image, imageName)
     }
 
     @Delete(':id')

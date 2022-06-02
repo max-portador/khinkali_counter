@@ -26,7 +26,25 @@ export const eventsAPI = {
         catch (e) {
             console.log(e, 'Произошла ошибка при создании события')
         }
+    },
+
+    update: async(formData: FormData): Promise<IEvent> => {
+
+        try {
+            const response = await instance.put<IEvent>('/events', formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+            return response.data
+        }
+        catch (e) {
+            console.log(e, 'Произошла ошибка при создании события')
+        }
     }
+
+
 
 
 }
