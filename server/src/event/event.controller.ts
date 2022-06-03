@@ -46,6 +46,7 @@ export class EventController{
 
     @Delete(':id')
     delete(@Param('id') id: Types.ObjectId) {
+        let a = id
         return this.eventService.delete(id)
     }
 

@@ -15,7 +15,7 @@ const CreateEvent = () => {
     const [amount, setAmount] = useState<number>(1)
     const [picture, setPicture] = useState<Blob | null>(null)
 
-    const [alertIsOpen, setAlertIsOpen] = React.useState(false);
+    const [alertIsOpen, setAlertIsOpen] = React.useState(true);
     const [status, setStatus] = useState<number | null>(null)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

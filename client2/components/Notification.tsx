@@ -1,7 +1,6 @@
 import React, {FC, useEffect, useState} from "react";
 import {StatusCode} from "../types/response";
 import {Alert, Slide, SlideProps, Snackbar} from "@mui/material";
-import styled from "styled-components";
 
 
 export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen, status}) => {
@@ -29,26 +28,27 @@ export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen
         setAlertIsOpen(false);
     };
 
+
     return <>
         <Snackbar anchorOrigin={{vertical:'top', horizontal: 'right'}}
                   TransitionComponent={TransitionUp}
                   open={alertIsOpen}
                   autoHideDuration={6000}
                   onClose={handleClose}>
-            <StyledAlert onClose={handleClose} severity={alertProps.severity} >
-                {alertProps.message}
-            </StyledAlert>
+                    <Alert severity={alertProps.severity}
+                    sx={{
+                        width: '100%',
+                        borderWidth: '1px',
+                        borderStyle: 'solid',
+                        marginTop: "3vh",
+                        borderColor: alertProps.severity === AlertSeverity.SUCSESS ? 'darkgreen' : 'darkred'
+                    }}
+                    >
+                        {alertProps.message}
+                    </Alert>
         </Snackbar>
     </>
 }
-
-
-const StyledAlert = styled((props) => <Alert {...props}/>)`
-    width: 100%;
-    border-width: 1px;
-    border-style: solid;
-    border-color: ${ (props) => props.alertProps.severity === AlertSeverity.SUCSESS ? 'darkgreen' : 'darkred'};
-`
 
 
 type NotificationProps = {
@@ -71,6 +71,7 @@ enum AlertMessage {
     'SUCSESS' = "Событие успешно сохранено",
     "ERROR" = "Произошла ошибка во время сохранения события"
 }
+
 
 function TransitionUp(props: TransitionProps) {
     return <Slide {...props} direction="up"/>;

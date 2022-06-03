@@ -2,6 +2,8 @@ import {IEvent} from "../../types/event";
 import {InferActionsType, RootState} from "../index";
 import {eventsAPI} from "../../api/eventsApi";
 import {ThunkAction} from "redux-thunk";
+import {STATUS_CODES} from "http";
+import {StatusCode} from "../../types/response";
 
 const initialState = {
     events: [] as IEvent[]
@@ -17,12 +19,14 @@ const eventsReducer = (state = initialState, action: EventsActionsType): EventsS
         case EventsActionsTypeEnum.UPDATE_EVENT:
             return {
                 ...state,
-                events: state.events.map( event =>
-                    event._id === action.payload._id
-                        ? action.payload
-                        : event
-                )
-
+                events: state.events.map( event => event._id === action.payload._id
+                                                    ? action.payload
+                                                    : event )
+            }
+        case EventsActionsTypeEnum.DELETE_EVENT:
+            return {
+                ...state,
+                events: state.events.filter( event => event._id !== action.payload)
             }
         default:
             return state
@@ -37,6 +41,9 @@ export const eventsActions = {
     } as const),
     updateEvent: (payload: IEvent) => ({
         type: EventsActionsTypeEnum.UPDATE_EVENT, payload
+    } as const),
+    deleteEvent: (payload: string) => ({
+        type: EventsActionsTypeEnum.DELETE_EVENT, payload
     } as const),
 }
 
@@ -62,6 +69,21 @@ export const updateEvent = (formData: FormData): ThunkAction<void, RootState, un
         }
 }
 
+export const deleteEvent = (id: string): ThunkAction<void, RootState, unknown, EventsActionsType> =>
+    async (dispatch) => {
+        try {
+            let status = await eventsAPI.delete(id)
+            if (status === StatusCode.OK){
+                dispatch(eventsActions.deleteEvent(id))
+            }
+
+        }
+        catch (e) {
+            console.log(e, 'Произошла ошибка при попытке удалить событие')
+        }
+    }
+
+
 
 export default eventsReducer;
 
@@ -69,7 +91,8 @@ export type EventsStateType = typeof initialState
 
 export enum EventsActionsTypeEnum {
     GET_EVENTS = 'GET_EVENTS',
-    UPDATE_EVENT = 'UPDATE_EVENT'
+    UPDATE_EVENT = 'UPDATE_EVENT',
+    DELETE_EVENT = 'DELETE_EVENT'
 }
 
 export type EventsActionsType = InferActionsType<typeof eventsActions>

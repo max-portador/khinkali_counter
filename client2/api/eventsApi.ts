@@ -13,9 +13,21 @@ export const eventsAPI = {
     },
 
     create: async(formData: FormData): Promise<IEvent> => {
-
         try {
             const response = await instance.post<IEvent>('/events', formData,
+                {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                })
+            return response.data
+        }
+        catch (e) {
+            console.log(e, 'Произошла ошибка при создании события')
+        }
+    },
+
+    update: async(formData: FormData): Promise<IEvent> => {
+        try {
+            const response = await instance.put<IEvent>('/events', formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -28,19 +40,14 @@ export const eventsAPI = {
         }
     },
 
-    update: async(formData: FormData): Promise<IEvent> => {
-
+    delete: async (id: string): Promise<number> => {
         try {
-            const response = await instance.put<IEvent>('/events', formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                })
-            return response.data
+            const response = await instance.delete<string>(`/events/${id}`)
+            console.log(response.status)
+            return response.status
         }
         catch (e) {
-            console.log(e, 'Произошла ошибка при создании события')
+            console.log(e, 'Произошла ошибка при удалении события')
         }
     }
 

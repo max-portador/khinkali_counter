@@ -1,6 +1,6 @@
-import React, {ChangeEvent, DragEvent, FC, useEffect, useRef, useState} from 'react';
+import React, {ChangeEvent, DragEvent, FC, useRef} from 'react';
 import styled from "styled-components";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import CancelPresentationRoundedIcon from '@mui/icons-material/CancelPresentationRounded';
 import {Typography} from "@mui/material";
 
 
@@ -60,10 +60,7 @@ const DropArea: FC<PropsType> = ({setPicture, picture, text, textWidth, minHeigh
             <Clear onClick={(e) => {
                 e.stopPropagation()
                 setPicture(null)
-            }
-            }
-
-            />
+            }}/>
             <input type={"file"} ref={ref} onChange={onChange} style={{display: 'none'}}/>
         </Container>
 
@@ -109,7 +106,7 @@ const UploadedImg = styled.img`
   filter: blur(10px);
 `
 
-const Clear = styled((props) => <HighlightOffIcon {...props} fontSize='large' color='error'/>)`
+const Clear = styled((props) => <CancelPresentationRoundedIcon {...props} fontSize='large' color='error'/>)`
   position: absolute;
   top: 10px;
   right: 10px;

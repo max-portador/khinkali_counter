@@ -1,11 +1,14 @@
 import styled from "styled-components";
-import {Avatar, Card} from "@mui/material";
+import {Avatar, Button, Card} from "@mui/material";
 import React from "react";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CancelIcon from "@mui/icons-material/Cancel";
+import CancelPresentationRoundedIcon from '@mui/icons-material/CancelPresentationRounded';
 
 export const StyledCard = styled(Card)`
   display: flex;
   flex-direction: row;
-  justify-items: center;
+  justify-self: center;
   padding: 5px 20px;
   border: 0.5px solid lightgray;
   background-color: #b8c6db;
@@ -16,4 +19,17 @@ export const StyledImage = styled((props) => <Avatar {...props} variant={"rounde
   margin: 30px;
   height: 300px;
   width: 200px;
+`
+
+export const DeleteButton = styled((props) =>
+    <Button variant="outlined"  color={'error'}  startIcon={<DeleteIcon/>} {...props} />)`
+    `
+
+export const CancelButton = styled((props) =>
+    <Button variant="outlined"  color={'error'}  startIcon={<CancelIcon/>} {...props} />)`
+    `
+
+export const CancelCornerIcon = styled((props) => <CancelPresentationRoundedIcon color={'error'}/>)`
+    margin: 0;
+    padding: 0;
 `

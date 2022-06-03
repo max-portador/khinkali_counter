@@ -13,18 +13,32 @@ const EventList = () => {
 
     return (
         <MainLayout marginLeft={120}>
-            <Grid container justifyContent='center'>
+            <Grid container justifyContent='center' >
                 <Box style={{width: 900}}>
                     <Box p={4}>
                         <Grid container justifyContent='center'>
                             <h1>Список событий</h1>
                         </Grid>
                     </Box>
-                    <Grid container justifyContent='center' gap={7} mb={5}>
+                    <Grid container direction={'column'} gap={3} justifyContent={'center'} justifyItems={'center'}>
                         {
                             events
                                 .sort(sortEventByDate)
-                                .map(event =>  <EvenCard key={event._id} event={event}/>)
+                                .reduce((acc, event) => {
+                                    let modifiedEvent = {...event, minAmount: acc.minAmount}
+                                    acc.minAmount = event.amount + 1;
+                                    acc.events.push(modifiedEvent)
+                                    return acc
+                                }, {minAmount: 1, events: []})
+                                .events
+                                .map(event =>
+                                    <Grid key={event._id}  container justifyContent={'center'}>
+                                        <EvenCard event={event}/>
+                                    </Grid>
+
+
+                                )
+
                         }
                     </Grid>
 

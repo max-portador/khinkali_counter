@@ -8,7 +8,7 @@ import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import DropArea from "./DropArea";
-import {StyledCard} from "./common/styled";
+import {CancelButton, StyledCard} from "./common/styled";
 import {IEvent} from "../types/event";
 import {useActions} from "../hooks/useActions";
 import {Box} from "@mui/system";
@@ -24,6 +24,16 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
     };
 
     const submitHandler = async (values: FormValues) => {
+        let formData = createFormData(values)
+
+        setIsUpdating(true)
+        await updateEvent(formData)
+        setIsUpdating(false)
+
+        setIsOpen(false)
+    }
+
+    const createFormData = (values: FormValues): FormData => {
         const {date, amount, image} = values
         let formData = new FormData();
 
@@ -34,18 +44,12 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
             formData.append('image', image)
         }
 
-        setIsUpdating(true)
-        let result = await updateEvent(formData)
-        setIsUpdating(false)
-
-        setIsOpen(false)
-
-
+        return  formData
     }
+
+
     return (
         <Dialog maxWidth='xl' open={isOpen} onClose={() => setIsOpen(false)}>
-
-
             <Formik initialValues={{
                 date: event.date,
                 amount: event.amount,
@@ -88,7 +92,7 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
                                            sx={{width: 227}}
                                            onChange={(e: ChangeEvent<HTMLInputElement>) => {
                                                let val = Number(e.target.value)
-                                               setFieldValue('amount', val < 1 ? 1 : val)
+                                               setFieldValue('amount', val < event.minAmount ? event.minAmount : val)
                                            }}
                                            value={values.amount}
                                            type={'number'}
@@ -100,13 +104,9 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
                                     >
                                         Сохранить
                                     </Button>
-                                    <Button variant="outlined" color={'error'} startIcon={<CancelIcon/>}
-                                            onClick={() => {
-                                                setIsOpen(false)
-                                            }}
-                                    >
+                                    <CancelButton onClick={() => { setIsOpen(false) }} >
                                         Отмена
-                                    </Button>
+                                    </CancelButton>
                                 </Stack>
                                 <Grid container
                                       position={'relative'}
@@ -148,7 +148,7 @@ export default EditDialog;
 type PropsType = {
     isOpen: boolean,
     setIsOpen: Function,
-    event: IEvent,
+    event: IEvent & {minAmount: number},
 }
 
 type FormValues = {

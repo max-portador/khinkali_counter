@@ -1,4 +1,4 @@
-import {eventsActions, fetchEvents, updateEvent} from "../store/reducers/eventsReducer";
+import {deleteEvent, eventsActions, fetchEvents, updateEvent} from "../store/reducers/eventsReducer";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../store";
 import {bindActionCreators} from "redux";
@@ -6,7 +6,8 @@ import {bindActionCreators} from "redux";
 const ActionCreators = {
     ...eventsActions,
     fetchEvents,
-    updateEvent
+    updateEvent,
+    deleteEvent,
 }
 
 export const useActions = () => {
