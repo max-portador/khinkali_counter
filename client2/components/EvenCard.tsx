@@ -28,8 +28,8 @@ const EvenCard: FC<PropsType> = ({event}) => {
                     </Grid>
 
                     <Grid container pl={2} height={80} justifyContent={'center'}>
-                        <Typography variant='h3' noWrap={true}>
-                            {event.amount + ' хинкалей'}
+                        <Typography variant='h4' noWrap={true}>
+                            {`Хинкали: ${event.amount} шт`}
                         </Typography>
                     </Grid>
 

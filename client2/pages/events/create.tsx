@@ -4,10 +4,10 @@ import {Button, Stack, TextField} from "@mui/material";
 import styled from "styled-components";
 import DropArea from "../../components/DropArea";
 import {eventsAPI} from "../../api/eventsApi";
-import {ImageFileUpload} from "../../components/FileUploaders/image_file_upload";
 import {StatusCode} from "../../types/response";
 import {Notification} from "../../components/Notification";
 import StyledDatePicker from "../../components/StyledDatePicker";
+import ImgUrlDialog from "../../components/ImgURLDialog";
 
 const CreateEvent = () => {
 
@@ -15,7 +15,8 @@ const CreateEvent = () => {
     const [amount, setAmount] = useState<number>(1)
     const [picture, setPicture] = useState<Blob | null>(null)
 
-    const [alertIsOpen, setAlertIsOpen] = React.useState(true);
+    const [alertIsOpen, setAlertIsOpen] = React.useState(false);
+    const [isOpenURL, setIsOpenURL] = React.useState(false);
     const [status, setStatus] = useState<number | null>(null)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,11 +24,29 @@ const CreateEvent = () => {
         setAmount(val < 1 ? 1 : val)
     }
 
-    const onSubmit = async () => {
+    const createFormData = async (): Promise<FormData> => {
         const formData = new FormData()
         formData.append('amount', String(amount))
-        formData.append('image', picture)
         formData.append('date', String(eventDate))
+
+        if (typeof picture === "string"){
+            const params = new Proxy(new URLSearchParams(picture), {
+                get: (searchParams, prop: string) => searchParams.get(prop),
+            });
+            let format = params['format'] || 'jpg';
+            let blobFile = await fetch(picture).then(r => r.blob())
+            let file = new File([blobFile], `1.${format}`, { type: `image/${formData}` })
+            formData.append('image', file)
+        }
+        else {
+            formData.append('image', picture)
+        }
+
+        return formData;
+    };
+
+    const onSubmit = async () => {
+        const formData = await createFormData();
 
         let event = await eventsAPI.create(formData)
 
@@ -42,6 +61,7 @@ const CreateEvent = () => {
         <MainLayout>
             <Form direction={"column"} spacing={2}>
                     <CenteredStack direction={'row'} spacing={3}>
+                        <ImgUrlDialog isOpen={isOpenURL} setIsOpen={setIsOpenURL} setFile={setPicture}/>
                         <TextField
                             value={amount}
                             type='number'
@@ -50,7 +70,11 @@ const CreateEvent = () => {
                             label="Количество хинкалей"
                             color="primary"
                         />
-                        <ImageFileUpload picture={picture} setPicture={setPicture}/>
+                        {/*<ImageFileUpload picture={picture} setPicture={setPicture}/>*/}
+
+                        <Button variant={'outlined'} onClick={()=> setIsOpenURL(true)}>
+                            Загрузить изображение по ссылке
+                        </Button>
                         <StyledDatePicker eventDate={eventDate} setEventDate={setEventDate}/>
                     </CenteredStack>
                 <DropArea picture={picture} setPicture={setPicture}/>

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cra": "^0.0.0"
+    "cra": "^0.0.0",
+    "multer": "^1.4.5-lts.1"
   }
 }

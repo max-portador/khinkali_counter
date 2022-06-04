@@ -1,14 +1,12 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {Field, Form, Formik} from "formik";
 import {URL} from "../api/baseApi";
-import {Button, Dialog, Grid, LinearProgress, Stack, TextField} from "@mui/material";
+import {Dialog, Grid, LinearProgress, Stack, TextField} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Cancel";
 import DropArea from "./DropArea";
-import {CancelButton, StyledCard} from "./common/styled";
+import {CancelButton, SaveButton, StyledCard} from "./common/styled";
 import {IEvent} from "../types/event";
 import {useActions} from "../hooks/useActions";
 import {Box} from "@mui/system";
@@ -100,10 +98,9 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
                                     />
                                 </Grid>
                                 <Stack direction="row" spacing={1} mt={4} ml={2} justifyContent={'center'}>
-                                    <Button variant="outlined" type='submit' endIcon={<SaveIcon/>}
-                                    >
+                                    <SaveButton type='submit'>
                                         Сохранить
-                                    </Button>
+                                    </SaveButton>
                                     <CancelButton onClick={() => { setIsOpen(false) }} >
                                         Отмена
                                     </CancelButton>
@@ -119,9 +116,6 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
                                         }
                                     </Box>
                                 </Grid>
-
-
-
                             </Stack>
 
                             <Grid container mt={2} mb={2}>

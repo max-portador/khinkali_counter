@@ -25,7 +25,11 @@ const reducer = (state, action) => {
 const makeStore = (context: Context) => createStore(reducer, applyMiddleware(thunk));
 
 // export an assembled wrapper
-export const wrapper = createWrapper<Store<RootState>>(makeStore, {debug: true});
+export const wrapper = createWrapper<Store<RootState>>(makeStore, {
+    debug: true,
+    serializeState: (state) => JSON.stringify(state),
+    deserializeState: (state) => JSON.parse(state),
+});
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = Dispatch<AllActions> & ThunkDispatch<RootState, void, AllActions>
