@@ -30,7 +30,6 @@
     "dropbox-v2-api": "^2.5.3",
     "mongo-gridfs": "^1.1.0",
     "mongoose": "^6.3.3",
-    "multer": "7.5.5",
     "multer-gridfs-storage": "^5.0.2",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
