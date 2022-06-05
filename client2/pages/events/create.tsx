@@ -35,7 +35,7 @@ const CreateEvent = () => {
             });
             let format = params['format'] || 'jpg';
             let blobFile = await fetch(picture).then(r => r.blob())
-            let file = new File([blobFile], `1.${format}`, { type: `image/${formData}` })
+            let file = new File([blobFile], `1.${format}`, { type: `image/${format}` })
             formData.append('image', file)
         }
         else {
@@ -61,7 +61,7 @@ const CreateEvent = () => {
         <MainLayout>
             <Form direction={"column"} spacing={2}>
                     <CenteredStack direction={'row'} spacing={3}>
-                        <ImgUrlDialog isOpen={isOpenURL} setIsOpen={setIsOpenURL} setFile={setPicture}/>
+
                         <TextField
                             value={amount}
                             type='number'
@@ -70,11 +70,11 @@ const CreateEvent = () => {
                             label="Количество хинкалей"
                             color="primary"
                         />
-                        {/*<ImageFileUpload picture={picture} setPicture={setPicture}/>*/}
 
                         <Button variant={'outlined'} onClick={()=> setIsOpenURL(true)}>
                             Загрузить изображение по ссылке
                         </Button>
+                        <ImgUrlDialog isOpen={isOpenURL} setIsOpen={setIsOpenURL} setFile={setPicture}/>
                         <StyledDatePicker eventDate={eventDate} setEventDate={setEventDate}/>
                     </CenteredStack>
                 <DropArea picture={picture} setPicture={setPicture}/>

@@ -4,21 +4,6 @@ import {wrap} from "popmotion";
 import {images} from "./HomePage";
 import {AnimatePresence, motion} from "framer-motion";
 
-const Container = styled.div`
-  height: calc(100vh - 90px - 120px);;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const GalleryImage = styled(motion.img)`
-  position: absolute;
-  object-fit: scale-down;
-  width: 50%;
-  height: 100%
-`
-
 const variants = {
     enter: (direction: number) => {
         return {
@@ -48,7 +33,7 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => 
 
     return (<Container className='example-container'>
             <AnimatePresence initial={false} custom={direction}>
-                <motion.img
+                <GalleryImage
                     key={active}
                     src={images[imageIndex]}
                     custom={direction}
@@ -60,25 +45,22 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => 
                         x: {type: 'spring', stiffness: 300, damping: 30},
                         opacity: {duration: 0.2}
                     }}
-                    className='galleryImage'
                 />
             </AnimatePresence>
 
             {active < images.length - 1 &&
-                <div className="next"
+                <button className="next"
                         onClick={() => paginate(1)}>
                 {"‣"}
-            </div>}
+            </button>}
 
             {active > 0 &&
-                <div className="prev"
+                <button className="prev"
                      onClick={() => paginate(-1)}>
                     {"‣"}
-                </div>
+                </button>
             }
-
         </Container>
-
 
 )
     ;
@@ -92,3 +74,19 @@ type PropsType = {
     setEvent:  React.Dispatch<React.SetStateAction<[number, number]>>,
     paginate: (newDirection: number) => void
 }
+
+const Container = styled.div`
+  height: calc(100vh - 90px - 120px);;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const GalleryImage = styled(motion.img)`
+  position: absolute;
+  object-fit: scale-down;
+  width: 50%;
+  height: 100%;
+  padding-bottom: 12px;
+`

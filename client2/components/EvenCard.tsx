@@ -15,7 +15,7 @@ const EvenCard: FC<PropsType> = ({event}) => {
     const [isDeleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false)
 
     return (
-        <>
+        <Grid container justifyContent={'center'}>
             <EditDialog event={event} isOpen={isEditMode} setIsOpen={setEditMode}/>
             <DeleteDialog isOpen={isDeleteDialogOpen} setIsOpen={setDeleteDialogOpen} event={event}/>
             <StyledCard>
@@ -37,10 +37,7 @@ const EvenCard: FC<PropsType> = ({event}) => {
 
                         <Button variant="outlined"
                                 endIcon={<ModeEditOutlinedIcon/>}
-                                onClick={() => {
-                                    setEditMode(true)
-                                }}
-                        >
+                                onClick={() => setEditMode(true)} >
                             Изменить
                         </Button>
 
@@ -52,7 +49,7 @@ const EvenCard: FC<PropsType> = ({event}) => {
                 </Stack>
                 <StyledImage src={`${URL}/${event.imageName}`}/>
             </StyledCard>
-        </>
+        </Grid>
     );
 };
 

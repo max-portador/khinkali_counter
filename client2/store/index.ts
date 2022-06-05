@@ -1,7 +1,8 @@
-import {AnyAction, applyMiddleware, combineReducers, createStore, Dispatch, Store} from "redux";
+import {AnyAction, combineReducers, Dispatch, Store} from "redux";
 import {Context, createWrapper, HYDRATE} from "next-redux-wrapper";
-import thunk, {ThunkDispatch} from "redux-thunk";
+import {ThunkDispatch} from "redux-thunk";
 import eventsReducer, {EventsActionsType} from "./reducers/eventsReducer";
+import {configureStore} from "@reduxjs/toolkit";
 
 
 export const rootReducer = combineReducers( {
@@ -22,7 +23,7 @@ const reducer = (state, action) => {
 };
 
 // create a makeStore function
-const makeStore = (context: Context) => createStore(reducer, applyMiddleware(thunk));
+const makeStore = (context: Context) => configureStore({ reducer })
 
 // export an assembled wrapper
 export const wrapper = createWrapper<Store<RootState>>(makeStore, {

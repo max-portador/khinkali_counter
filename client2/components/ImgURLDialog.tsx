@@ -8,10 +8,28 @@ const ImgUrlDialog:FC<PropsType> = ({isOpen, setIsOpen, setFile}) => {
         setURL(e.currentTarget.value)
     }
 
-    const clickHandler = () => {
-        setFile(URL)
-        setURL('')
-        setIsOpen(false)
+    const clickHandler = async () => {
+        try {
+            let response = await fetch(URL)
+            let blobFile = await response.blob()
+            const [type, extention] = blobFile.type.split('/')
+            if (type === 'image') {
+                let file = new File([blobFile],
+                    `1.${extention}`,
+                    { type: blobFile.type })
+
+                setFile(file)
+                setURL('')
+                setIsOpen(false)
+            }else
+            {
+               alert('Некорректный URL')
+            }
+
+        }
+        catch (e) {
+            alert(e)
+        }
     }
 
     return (

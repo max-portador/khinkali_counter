@@ -1,65 +1,63 @@
-import {Box, Grid} from '@mui/material';
-import React, {useEffect} from 'react';
+import {Button, Grid} from '@mui/material';
+import React, {ChangeEvent} from 'react';
 import MainLayout from "../../layout/MainLayout";
 import {NextThunkDispatch, wrapper} from "../../store";
 import {fetchEvents} from "../../store/reducers/eventsReducer";
 import {useTypedSelectors} from "../../hooks/useTypedSelectors";
 import EvenCard from "../../components/EvenCard";
-import {sortEventByDate} from "../../utils/dateHelper";
-import {useActions} from "../../hooks/useActions";
-import {IEvent} from "../../types/event";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import styled from "styled-components";
+import {useRouter} from "next/router";
+import {preparedEvents} from "../../utils/events";
+import {CenteredStack} from "./create";
 
 
 const EventList = () => {
     const {events} = useTypedSelectors(state => state.event)
-    const {fetchEvents} = useActions()
-
-    useEffect(() => {
-        fetchEvents()
-    }, [])
-
-    const addMinAmount = (acc, event: IEvent) => {
-        let modifiedEvent = {...event, minAmount: acc.minAmount}
-        acc.minAmount = event.amount + 1;
-        acc.events.push(modifiedEvent)
-        return acc
+    const router = useRouter()
+    const clickButtonHandler = async (e: ChangeEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        e.stopPropagation()
+        await router.push('events/create')
     }
 
     return (
-        <MainLayout marginLeft={120}>
-            <Grid container justifyContent='center' >
-                <Box style={{width: 900}}>
-                    <Box p={4}>
-                        <Grid container justifyContent='center'>
-                            <h1>Список событий</h1>
-                        </Grid>
-                    </Box>
-                    <Grid container direction={'column'} gap={3} justifyContent={'center'} justifyItems={'center'}>
-                        {
-                           events && events
-                                .sort(sortEventByDate)
-                                .reduce(addMinAmount, {minAmount: 1, events: []})
-                                .events
-                                .map(event =>
-                                    <Grid key={event._id}  container justifyContent={'center'}>
-                                        <EvenCard event={event}/>
-                                    </Grid>
-                                )
-                        }
+        <MainLayout>
+            <Grid container justifyContent='center'>
+                <CenteredStack width={1200}  >
+                    <Grid container justifyContent='center' p={4}>
+                        <h1>Список событий</h1>
                     </Grid>
-                </Box>
+                    <CenteredStack direction={'column'} gap={3} >
+                        {
+                            events && preparedEvents(events)
+                                .map(event => <EvenCard key={event._id} event={event}/>)
+                        }
+                    </CenteredStack>
+                </CenteredStack>
             </Grid>
+                <AddButton onClick={clickButtonHandler}>
+                    Добавить событие
+                </AddButton>
         </MainLayout>
     );
 };
 
 export default EventList;
 
-// export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
-//     const dispatch = store.dispatch as NextThunkDispatch
-//     await dispatch(await fetchEvents())
-//     return null
-// })
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+    const dispatch = store.dispatch as NextThunkDispatch
+    await dispatch(await fetchEvents())
+    return null
+})
 
+const AddButton = styled((props) => <Button size='small' variant={'contained'}
+                                            {...props} startIcon={<AddCircleIcon/>}/>)`
+  position: fixed;
+  right: 3em;
+  bottom: 10%;
+  line-height: 30px;
+  border-radius: 10px;
+`
 
 
