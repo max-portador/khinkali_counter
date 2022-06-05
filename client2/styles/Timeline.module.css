@@ -2,62 +2,24 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 
 /*=====================================*/
 
-.container {
-    width: 100%
-}
-
 .progressbar {
-    counter-reset: step;
+    display: flex;
+    flex-direction: row;
+    width: 20vh;
+    margin: 0 50px;
 }
-
-.progressbar li{
-    list-style-type: none;
-    float: left;
-    width: 60px;
-    position: relative;
-    text-align: center;
-}
-
-.progressbar li:first-child {
-    left: 20px;
-}
-
-.progressbar li:before {
-    content: "";
-    width: 10px;
-    height: 10px;
-    border: 1px solid #ddd;
-    display: block;
-    text-align: center;
-    margin: 0 auto 10px auto;
-    border-radius: 50%;
-    background-color: white;
-    overflow: hidden;
-}
-
 
 .scale{
     background-color: darkred;
     height: 3px;
+    width: 1px;
     position: relative;
     top: 8px;
-    left: 50px;
-}
-
-.progressbar li.active {
-    color: darkred;
-}
-
-.progressbar li.active:before {
-    color: darkred;
-    background-color: darkred;
-}
-
-.progressbar li.preactive:before {
-    border-color: darkred;
+    margin-left: 50px;
+    left: 27px;
 }

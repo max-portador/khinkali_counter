@@ -4,3 +4,8 @@ export interface IEvent{
     amount: number;
     imageName: string;
 }
+
+export interface ModifiedEvent extends IEvent{
+    minAmount: number,
+    daysToNext: number
+}

@@ -3,6 +3,7 @@ import {AppProps} from 'next/app';
 import {wrapper} from '../store'
 import '../styles/global.css'
 
+
 const WrappedApp: FC<AppProps> = ({Component, pageProps}) => <Component {...pageProps}/>
 
 export default wrapper.withRedux(WrappedApp)

@@ -21,9 +21,9 @@ const ImgUrlDialog:FC<PropsType> = ({isOpen, setIsOpen, setFile}) => {
                 setFile(file)
                 setURL('')
                 setIsOpen(false)
-            }else
+            } else
             {
-               alert('Некорректный URL')
+               alert('Некорректный serverURL')
             }
 
         }

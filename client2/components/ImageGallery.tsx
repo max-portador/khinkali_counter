@@ -1,8 +1,9 @@
-import React, {FC} from 'react';
+import React, {FC, useEffect} from 'react';
 import styled from "styled-components";
 import {wrap} from "popmotion";
-import {images} from "./HomePage";
 import {AnimatePresence, motion} from "framer-motion";
+import {ModifiedEvent} from "../types/event";
+import {serverURL} from "../api/baseApi";
 
 const variants = {
     enter: (direction: number) => {
@@ -27,15 +28,20 @@ const variants = {
     }
 }
 
-const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => {
+const ImageGallery:FC<PropsType> = ({active, direction, paginate, events, setEvent}) => {
 
-    const imageIndex = wrap(0, images.length, active)
+    const imageIndex = wrap(0, events.length, active)
+    useEffect(() => {
+        if (events.length)
+        console.log(URL + '/' + events[imageIndex].imageName )
+    }, [])
 
     return (<Container className='example-container'>
             <AnimatePresence initial={false} custom={direction}>
                 <GalleryImage
                     key={active}
-                    src={images[imageIndex]}
+                    src={serverURL + '/' + events[imageIndex].imageName}
+                    // src={'http://localhost:5555/9a3c92e5-4b21-4a2c-8060-11b562867de6.png'}
                     custom={direction}
                     variants={variants}
                     initial='enter'
@@ -48,7 +54,7 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, setEvent}) => 
                 />
             </AnimatePresence>
 
-            {active < images.length - 1 &&
+            {active < events.length - 1 &&
                 <button className="next"
                         onClick={() => paginate(1)}>
                 {"‣"}
@@ -71,6 +77,7 @@ export default ImageGallery;
 type PropsType = {
     active: number,
     direction: number,
+    events: ModifiedEvent[],
     setEvent:  React.Dispatch<React.SetStateAction<[number, number]>>,
     paginate: (newDirection: number) => void
 }

@@ -1,13 +1,21 @@
 import React, {FC, useState} from 'react';
-import {IEvent} from "../types/event";
+import {ModifiedEvent} from "../types/event";
 import {Button, Grid, Stack, Typography} from "@mui/material";
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
-import {URL} from "../api/baseApi";
+import {serverURL} from "../api/baseApi";
 import {CardOptions, formatDate} from "../utils/dateHelper";
 import {DeleteButton, StyledCard, StyledImage} from "./common/styled";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";
 
+const days_label = (days_amount: number) => {
+
+    let num = days_amount % 10
+    let label = ' дней'
+    if (num === 1) label = ' день'
+    if (num >= 2 && num <= 4) label = ' дня'
+    return  days_amount + label
+}
 
 const EvenCard: FC<PropsType> = ({event}) => {
 
@@ -28,26 +36,34 @@ const EvenCard: FC<PropsType> = ({event}) => {
                     </Grid>
 
                     <Grid container pl={2} height={80} justifyContent={'center'}>
-                        <Typography variant='h4' noWrap={true}>
-                            {`Хинкали: ${event.amount} шт`}
+                        <Typography variant='h4' color={'steelblue'} noWrap={true}>
+                            {`${event.amount} хинкали`}
                         </Typography>
                     </Grid>
+                    {!!event.daysToNext &&
+                        <Stack>
+                            <div>{'До следующего'}</div>
+                            <div>{days_label(event.daysToNext)}</div>
+                        </Stack>
+                    }
 
                     <Stack direction="row" spacing={1} mt={4} ml={2} justifyContent={'center'}>
 
                         <Button variant="outlined"
                                 endIcon={<ModeEditOutlinedIcon/>}
-                                onClick={() => setEditMode(true)} >
+                                onClick={() => setEditMode(true)}>
                             Изменить
                         </Button>
 
-                        <DeleteButton onClick={() => { setDeleteDialogOpen(true) }} >
+                        <DeleteButton onClick={() => {
+                            setDeleteDialogOpen(true)
+                        }}>
                             Удалить
                         </DeleteButton>
 
                     </Stack>
                 </Stack>
-                <StyledImage src={`${URL}/${event.imageName}`}/>
+                <StyledImage src={`${serverURL}/${event.imageName}`}/>
             </StyledCard>
         </Grid>
     );
@@ -57,5 +73,5 @@ export default EvenCard;
 
 
 type PropsType = {
-    event: IEvent & {minAmount: number}
+    event: ModifiedEvent
 }

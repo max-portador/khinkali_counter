@@ -1,6 +1,6 @@
 import React, {ChangeEvent, FC, useState} from 'react';
 import {Field, Form, Formik} from "formik";
-import {URL} from "../api/baseApi";
+import {serverURL} from "../api/baseApi";
 import {Dialog, Grid, LinearProgress, Stack, TextField} from "@mui/material";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
@@ -51,7 +51,7 @@ const EditDialog:FC<PropsType> = ({event, isOpen, setIsOpen}) => {
             <Formik initialValues={{
                 date: event.date,
                 amount: event.amount,
-                image: `${URL}/${event.imageName}`,
+                image: `${serverURL}/${event.imageName}`,
             }}
                     onSubmit={submitHandler}
             >

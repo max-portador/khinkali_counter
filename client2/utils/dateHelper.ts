@@ -18,3 +18,10 @@ export const formatDate = (date: string, options:  Intl.DateTimeFormatOptions) =
 
 export const sortEventByDate = (a: IEvent, b: IEvent) => Number(new Date(a.date)) - Number(new Date(b.date))
 
+export const daysDiff = (first: string, second: string): number => {
+
+    const ms = new Date(second).getTime() - new Date(first).getTime()
+    let days = Math.ceil(ms / (3600 * 24 * 1000))
+    return days
+}
+

@@ -1,39 +1,45 @@
-import React, {FC, useState} from 'react';
-import Timeline from "./Timeline";
+import React, {FC, useEffect, useState} from 'react';
+import Timeline from "./TimeLine/Timeline";
 import ImageGallery from "./ImageGallery";
 import {NextThunkDispatch, wrapper} from "../store";
 import {fetchEvents} from "../store/reducers/eventsReducer";
+import {useTypedSelectors} from "../hooks/useTypedSelectors";
+import {preparedEvents} from "../utils/events";
+import {NextPage, NextPageContext} from "next";
+import {useActions} from "../hooks/useActions";
+import {Stack} from "@mui/material";
 
-
-export const images = Array(6).fill(null)
-    .map((_, i) => `/assets/${i + 1}.jpg`)
 
 const HomePage: FC = () => {
+    const {events} = useTypedSelectors(state => state.event)
+    const modifiedEvents = preparedEvents(events)
 
-    const [[event, direction], setEvent] = useState<[number, number]>([0, 0])
+    // const {fetchEvents} = useActions()
+    // useEffect(() => {fetchEvents()}, [])
+
+
+    const [[activeEvent, direction], setEvent] = useState<[number, number]>([0, 0])
 
     const paginate = (newDirection: number) => {
-        setEvent([event + newDirection, newDirection]);
+        setEvent([activeEvent + newDirection, newDirection]);
     }
 
     return <>
-        <Timeline
-            active={event}
-            setActive={setEvent}
-        />
-        <ImageGallery
-            active={event}
-            direction={direction}
-            setEvent={setEvent}
-            paginate={paginate}
-        />
+        <Stack width={1200}>
+            <Timeline
+                active={activeEvent}
+                setActive={setEvent}
+                events={modifiedEvents}
+            />
+            <ImageGallery
+                active={activeEvent}
+                direction={direction}
+                events={modifiedEvents}
+                setEvent={setEvent}
+                paginate={paginate}
+            />
+        </Stack>
     </>
 };
 
 export default HomePage;
-
-export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
-    const dispatch = store.dispatch as NextThunkDispatch
-    await dispatch(await fetchEvents())
-    return null
-})
