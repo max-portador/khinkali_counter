@@ -1,4 +1,4 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import styled from "styled-components";
 import {wrap} from "popmotion";
 import {AnimatePresence, motion} from "framer-motion";
@@ -31,17 +31,12 @@ const variants = {
 const ImageGallery:FC<PropsType> = ({active, direction, paginate, events, setEvent}) => {
 
     const imageIndex = wrap(0, events.length, active)
-    useEffect(() => {
-        if (events.length)
-        console.log(URL + '/' + events[imageIndex].imageName )
-    }, [])
 
     return (<Container className='example-container'>
             <AnimatePresence initial={false} custom={direction}>
                 <GalleryImage
                     key={active}
                     src={serverURL + '/' + events[imageIndex].imageName}
-                    // src={'http://localhost:5555/9a3c92e5-4b21-4a2c-8060-11b562867de6.png'}
                     custom={direction}
                     variants={variants}
                     initial='enter'
