@@ -10,16 +10,13 @@ const Index = () => {
     </MainLayout>
 }
 
-
-
-
 export default Index
 
 
 export const getServerSideProps = wrapper.getServerSideProps(store => async ({res}) => {
     res.setHeader(
         'Cache-Control',
-        'public, s-maxage=59, stale-while-revalidate=99'
+        'public, s-maxage=19, stale-while-revalidate=59'
     )
     const dispatch = store.dispatch as NextThunkDispatch
     await dispatch(await fetchEvents())

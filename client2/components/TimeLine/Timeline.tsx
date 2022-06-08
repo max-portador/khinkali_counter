@@ -3,7 +3,7 @@ import {IconButton} from "@mui/material";
 import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import {ArrowForwardIosRounded} from "@mui/icons-material";
 import {ModifiedEvent} from "../../types/event";
-import {daysDiff, EditOptions, formatDate} from "../../utils/dateHelper";
+import {EditOptions, formatDate} from "../../utils/dateHelper";
 import styled from "styled-components";
 import {LineItem} from "./LineItem";
 
@@ -11,14 +11,14 @@ import {LineItem} from "./LineItem";
 const Timeline: FC<PropsType> = ({active, setActive, events}) => {
 
     const [x, setX] = useState(0)
-    const [containerWidth, setContainerWidth] = useState(null)
-    let ref = useRef<HTMLDivElement>(null)
+    const [progressBarWidth, setProgressBarWidth] = useState(null)
+    let progressBarRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
-        if (ref){
-           setContainerWidth(ref.current.offsetWidth)
+        if (progressBarRef){
+            setProgressBarWidth(progressBarRef.current.offsetWidth)
         }
-    }, [ref])
+    }, [progressBarRef])
 
     const clickHandler = function (index: number) {
         setActive(([prev, direction]) => {
@@ -26,26 +26,29 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
             return [index, newDirection]
         })
     }
-
     const moveProgressBar = (sh: number) => {
-        let delta = Math.sign(sh) * containerWidth
-        setX((x) => (x + delta) > 0 ? 0 : x + delta)
+        let delta = Math.sign(sh) * progressBarWidth
+        let minShift = progressBarWidth -scaleWidth(events.length) - 10
+        let maxShift = 0
+            setX((x) => maxShift  - 40 <= x + delta
+            ? maxShift
+            : x + delta <= minShift + 40
+                        ? minShift
+                        : x + delta)
+
     }
 
-    const getTimeDistance = (i: number): number => {
-        return daysDiff(events[0].date, events[i].date)
-    }
-
-    const scaleWidth = () => {
-        if (active === 0) { return 0 }
-        return 20 * getTimeDistance(active) + 15 * active - 7
+    const scaleWidth = (index: number = active) => {
+        if (index === 0) { return 1 }
+        let marginsSum = events.slice(0, index)
+            .reduce((acc, event) => {
+                return (20 * event.daysToNext) % progressBarWidth + acc}, 0)
+        return marginsSum + (15 * index) - 7
     }
 
 
     return (
         <>
-            {/*<h2>{events[active].amount}</h2>*/}
-            <h2>{x}</h2>
             <Wrapper>
                 <IconButton aria-label="back"
                             onClick={() =>  moveProgressBar(1)}
@@ -53,27 +56,22 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
                 >
                     <ArrowBackIosRoundedIcon/>
                 </IconButton>
-                <Container ref={ref}>
+                <Container>
                     <div style={{
                         transform: `translateX(${x}px)`,
                         transition: 'transform .3s ease-in'
                     }}>
-                        <Scale
-                             style={{
-                                 width: scaleWidth() + 'px',
-                                 transition: 'width .3s linear'
-                             }}
-                        />
-                        <ProgressBar >
+                        <Scale width={scaleWidth()} />
+                        <ProgressBar ref={progressBarRef}>
                             {
                                 events.map((event, i) => (
                                     <LineItem key={formatDate(event.date, EditOptions)}
                                               total={events.length}
                                               event={event}
                                               i={i}
-                                              clickHandler={clickHandler}
+                                              onClick={() => clickHandler(i)}
+                                              viewPortWidth={progressBarWidth}
                                               active={active}
-                                              rootRef={ref}
                                     >
                                         {formatDate(event.date, EditOptions)}
                                     </LineItem>
@@ -83,7 +81,9 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
                     </div>
 
                 </Container>
-                <IconButton aria-label="forward" onClick={() =>  moveProgressBar(-1)}>
+                <IconButton aria-label="forward"
+                            disabled={scaleWidth(events.length) <= -x + progressBarWidth}
+                            onClick={() =>  moveProgressBar(-1)}>
                     <ArrowForwardIosRounded/>
                 </IconButton>
             </Wrapper>
@@ -112,20 +112,20 @@ const Container = styled.div`
   overflow-x: hidden;
 `
 
-const Scale = styled.div`
+const Scale = styled.div<{width: number}>`
   background-color: darkred;
   height: 3px;
-  width: 1px;
   position: relative;
   top: 8px;
   margin-left: 50px;
   left: 27px;
+  transition: width .3s linear;
+  width: ${props => props.width + 'px'};
 `
 
 const ProgressBar = styled.div`
   display: flex;
   flex-direction: row;
-  width: 20vh;
   margin: 0 50px;
 `
 

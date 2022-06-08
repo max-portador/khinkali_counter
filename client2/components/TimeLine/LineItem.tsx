@@ -1,36 +1,21 @@
 import styled from "styled-components";
 import {Stack} from "@mui/material";
-import React, {FC, useEffect} from "react";
+import React, {FC, MouseEvent} from "react";
 import Box from "@mui/material/Box";
 import {ModifiedEvent} from "../../types/event";
-import {useInView} from "react-intersection-observer";
 
 
-export const LineItem: FC<OuterPropsType> = ({children, clickHandler, total, event, i, active, rootRef}) => {
+export const LineItem: FC<OuterPropsType> = (props) => {
+const {children, total, event, i, active, viewPortWidth, onClick } = props
 
-    const [ref, inView] = useInView({
-        threshold: 1,
-        // root: rootRef.current
-    });
-
-    useEffect(() => {
-        if (inView) {
-            console.log('In view ' + i)
-        }
-    }, [inView])
-
-    return <StyledListItem event={event} i={i}
+    return <StyledListItem event={event} i={i} onClick={onClick}
                            active={active} total={total}
-                           clickHandler={clickHandler}
+                           viewPortWidth={viewPortWidth}
     >
-        {
-            inView && (<span>iwogberkbnenrkr</span>)
-        }
-        <Circle ref={ref} i={i} active={active}/>
+        <Circle i={i} active={active}/>
         <Label i={i} active={active}>
             {children}
         </Label>
-
     </StyledListItem>
 }
 
@@ -38,13 +23,12 @@ const COLOR_ACTIVE = 'darkred'
 const COLOR_NORMAL = 'black'
 
 const StyledListItem = styled((props: ItemPropsType) => {
-    const {clickHandler, i} = props
-    return <Stack direction={'column'} {...props} onClick={() => clickHandler(i)}/>
+    return <Stack direction={'column'} {...props} />
 })`
   margin-right: ${(props => props.i === props.total - 1
           ? 20
-          : 20 * props.event.daysToNext + 'px')};
-  padding-left: ${(props => props.i === 0 ? '20px' : 0)};
+          : (20 * props.event.daysToNext) % props.viewPortWidth + 'px')};
+  margin-left: ${(props => props.i === 0 ? '20px' : 0)};
   z-index: 1;
 `
 const Circle = styled((props: InnerCircleProps) => <Box {...props}/>)`
@@ -63,9 +47,9 @@ const Label = styled((props: InnerProps) => <Box {...props}/>)`
   float: left;
   width: 20px;
   text-align: center;
-  margin-left: -50px;
-  margin-top: 45px;
-  transform: rotate(-45deg);
+  margin-left: -30px;
+  margin-top: 60px;
+  transform: rotate(-60deg);
   color: ${props => props.i === props.active ? COLOR_ACTIVE : COLOR_NORMAL};
 `
 
@@ -74,26 +58,26 @@ type OuterPropsType = {
     event: ModifiedEvent,
     active: number,
     i: number,
-    clickHandler: Function,
+    viewPortWidth: number,
+    onClick: (e: MouseEvent<HTMLDivElement>) => void,
     children?: React.ReactNode,
-    rootRef: React.MutableRefObject<HTMLDivElement>,
 }
 
 
 type ItemPropsType = {
-    total: number
+    total: number,
     event: ModifiedEvent,
     active: number,
+    viewPortWidth: number,
     i: number,
-    clickHandler: Function,
     children?: React.ReactNode,
+    onClick: (e: MouseEvent<HTMLDivElement>) => void,
 }
 
 type InnerCircleProps = {
     i: number,
     active: number,
     children?: React.ReactNode,
-    ref: (node?: Element) => void
 }
 
 

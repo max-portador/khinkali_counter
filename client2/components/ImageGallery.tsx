@@ -12,13 +12,11 @@ const variants = {
             opacity: 0,
         }
     },
-
     center: {
         zIndex: 1,
         x: 0,
         opacity: 1
     },
-
     exit: (direction: number) => {
         return {
             zIndex: 0,
@@ -28,11 +26,11 @@ const variants = {
     }
 }
 
-const ImageGallery:FC<PropsType> = ({active, direction, paginate, events, setEvent}) => {
+const ImageGallery: FC<PropsType> = ({active, direction, paginate, events}) => {
 
     const imageIndex = wrap(0, events.length, active)
 
-    return (<Container className='example-container'>
+    return (<Container>
             <AnimatePresence initial={false} custom={direction}>
                 <GalleryImage
                     key={active}
@@ -47,24 +45,39 @@ const ImageGallery:FC<PropsType> = ({active, direction, paginate, events, setEve
                         opacity: {duration: 0.2}
                     }}
                 />
+
             </AnimatePresence>
 
             {active < events.length - 1 &&
                 <button className="next"
                         onClick={() => paginate(1)}>
-                {"‣"}
-            </button>}
+                    {"‣"}
+                </button>}
+
 
             {active > 0 &&
                 <button className="prev"
-                     onClick={() => paginate(-1)}>
+                        onClick={() => paginate(-1)}>
                     {"‣"}
                 </button>
             }
+            <div
+
+                style={{
+                    color: 'steelblue',
+                    fontSize: 64,
+                    textAlign: "center",
+                    position: 'fixed',
+                    transform: 'translateX(35vw)'
+                }}
+            >
+                <div>{events[active].amount}</div>
+                <div>хинкали</div>
+            </div>
         </Container>
 
-)
-    ;
+    )
+        ;
 };
 
 export default ImageGallery;
@@ -73,16 +86,16 @@ type PropsType = {
     active: number,
     direction: number,
     events: ModifiedEvent[],
-    setEvent:  React.Dispatch<React.SetStateAction<[number, number]>>,
     paginate: (newDirection: number) => void
 }
 
 const Container = styled.div`
-  height: calc(100vh - 90px - 120px);;
+  height: calc(95vh - 100px - 120px);;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-right: 20vw;
 `
 
 const GalleryImage = styled(motion.img)`

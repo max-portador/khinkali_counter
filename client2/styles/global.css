@@ -17,13 +17,15 @@ code {
   background-color: white;
 }
 
-.example-container {
-  width: 80vw;
-  height: 50vh;
+.container {
+  background-color: rgba(0, 0, 0, .1);
+  width: 70vw;
+  height: 30vh;
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-right: 20vw;
 }
 
 .galleryImage{
