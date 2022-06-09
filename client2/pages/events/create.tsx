@@ -8,8 +8,12 @@ import {StatusCode} from "../../types/response";
 import {Notification} from "../../components/Notification";
 import StyledDatePicker from "../../components/StyledDatePicker";
 import ImgUrlDialog from "../../components/ImgURLDialog";
+import {useActions} from "../../hooks/useActions";
 
 const CreateEvent = () => {
+
+    const [isPosting, setIsPosting] = useState(false);
+    const {createEvent} = useActions();
 
     const [eventDate, setEventDate] = useState<Date>(new Date());
     const [amount, setAmount] = useState<number>(1)
@@ -48,12 +52,17 @@ const CreateEvent = () => {
     const onSubmit = async () => {
         const formData = await createFormData();
 
-        let event = await eventsAPI.create(formData)
+        setIsPosting(true)
+        let event = createEvent(formData)
 
-        setStatus(event ? StatusCode.OK : 500)
         if (event) {
+
+            setStatus(StatusCode.OK)
             setPicture(null)
+        } else {
+            setStatus(500)
         }
+        setIsPosting(false)
         setAlertIsOpen(true)
     }
 
@@ -78,7 +87,7 @@ const CreateEvent = () => {
                         <StyledDatePicker eventDate={eventDate} setEventDate={setEventDate}/>
                     </CenteredStack>
                 <DropArea picture={picture} setPicture={setPicture}/>
-                <SubmitButton disabled={!picture} onClick={onSubmit}>Отправить</SubmitButton>
+                <SubmitButton disabled={!picture && !isPosting} onClick={onSubmit}>Отправить</SubmitButton>
                 <Notification status={status} alertIsOpen={alertIsOpen} setAlertIsOpen={setAlertIsOpen}/>
             </Form>
         </MainLayout>

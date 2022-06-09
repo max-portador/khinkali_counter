@@ -30,10 +30,10 @@ code {
 
 .galleryImage{
   position: absolute;
-  max-width: 90vw;
   object-fit: scale-down;
-  width: 90%;
-  height: 90%
+  padding-bottom: 12px;
+  width: 40vw;
+  height: calc(95vh - 100px - 120px);
 }
 
 .next,

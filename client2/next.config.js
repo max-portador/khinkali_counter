@@ -2,7 +2,8 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    path: './assets'
+    domains: ['localhost'],
+    formats: ['image/webp', 'image/jpeg', 'image/png', 'image/gif'],
   },
   compiler: {
     // ssr and displayName are configured by default

@@ -36,7 +36,7 @@ const eventsReducer = (state = initialState, action: EventsActionsType): EventsS
 
 
 export const eventsActions = {
-    getEvents: (payload: IEvent[]) => ({
+    setEvents: (payload: IEvent[]) => ({
         type: EventsActionsTypeEnum.GET_EVENTS, payload
     } as const),
     updateEvent: (payload: IEvent) => ({
@@ -51,12 +51,28 @@ export const fetchEvents = (): ThunkAction<void, RootState, unknown, EventsActio
     async (dispatch) => {
     try{
         const events = await eventsAPI.fetchEvents()
-        dispatch(eventsActions.getEvents(events))
+        dispatch(eventsActions.setEvents(events))
 
     } catch (e) {
         console.log(e, "Произошла ошибка при попытке обновить reduxStore")
     }
 }
+
+export const createEvent = (formData: FormData): ThunkAction<void, RootState, unknown, EventsActionsType> =>
+    async (dispatch) => {
+        try{
+            const event = await eventsAPI.create(formData)
+            debugger
+            if (event){
+                dispatch(fetchEvents())
+                return event
+            }
+
+        }
+        catch (e) {
+            console.log(e, "Произошла ошибка при попытке обновить событие")
+        }
+    }
 
 export const updateEvent = (formData: FormData): ThunkAction<void, RootState, unknown, EventsActionsType> =>
     async (dispatch) => {
