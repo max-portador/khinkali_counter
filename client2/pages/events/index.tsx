@@ -44,12 +44,12 @@ const EventList = () => {
 };
 
 export default EventList;
-//
-// export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
-//     const dispatch = store.dispatch as NextThunkDispatch
-//     await dispatch(await fetchEvents())
-//     return null
-// })
+
+export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+    const dispatch = store.dispatch as NextThunkDispatch
+    await dispatch(await fetchEvents())
+    return null
+})
 
 const AddButton = styled((props) => <Button size='small' variant={'contained'}
                                             {...props} startIcon={<AddCircleIcon/>}/>)`

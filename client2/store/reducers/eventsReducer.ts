@@ -2,7 +2,6 @@ import {IEvent} from "../../types/event";
 import {InferActionsType, RootState} from "../index";
 import {eventsAPI} from "../../api/eventsApi";
 import {ThunkAction} from "redux-thunk";
-import {STATUS_CODES} from "http";
 import {StatusCode} from "../../types/response";
 
 const initialState = {

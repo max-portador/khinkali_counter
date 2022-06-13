@@ -19,41 +19,17 @@ import HomeIcon from '@mui/icons-material/Home';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {useRouter} from "next/router";
+import {Button} from "@mui/material";
+import AuthDialog from "./AuthDialog";
 
 export const drawerWidth = 240;
 
 const menuItems = [
-    {text: 'Главная', href: '/', icon: () => <HomeIcon/> },
-    {text: 'Список событий', href: '/events', icon: () => <TableRowsIcon/>  },
-    {text: 'Добавить', href: '/events/create', icon: () => <AddCircleOutlineIcon/>  },
+    {text: 'Главная', href: '/', icon: () => <HomeIcon/>},
+    {text: 'Список событий', href: '/events', icon: () => <TableRowsIcon/>},
+    {text: 'Добавить', href: '/events/create', icon: () => <AddCircleOutlineIcon/>},
 ]
 
-
-
-const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-})<AppBarProps>(({ theme, open }) => ({
-    transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-    }),
-    ...(open && {
-        width: `calc(100% - ${drawerWidth}px)`,
-        marginLeft: `${drawerWidth}px`,
-        transition: theme.transitions.create(['margin', 'width'], {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    }),
-}));
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(0, 1),
-    ...theme.mixins.toolbar,
-    justifyContent: 'flex-end',
-}));
 
 export default function Navbar() {
     const theme = useTheme();
@@ -69,32 +45,16 @@ export default function Navbar() {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
+        <Box sx={{display: 'flex'}}>
+            <CssBaseline/>
             <AppBar position="fixed" open={open}>
-                <Toolbar sx={{ backgroundColor: '#333'}}>
-                    <IconButton
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        edge="end"
-                        sx={{ mr: 4,
-                            // position: 'absolute',
-                            backgroundColor: 'none',
-                            left: 20,
-                            ...(open && { display: 'none' }) }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
+                <Toolbar sx={{backgroundColor: '#333'}}>
 
-                    <Typography variant="h6"
-                                noWrap component="div"
-                                sx={{
-                                    position: 'fixed',
-                                    left: "50%",
-                                    transform: 'translateX(-50%)',
-                    }}>
-                        KHINKALI COUNTER
-                    </Typography>
+                    <StyledButton onClick={handleDrawerOpen} open={open}>
+                        <MenuIcon/>
+                    </StyledButton>
+                    <HeaderLabel> KHINKALI COUNTER </HeaderLabel>
+                    <AuthDialog/>
                 </Toolbar>
             </AppBar>
 
@@ -112,12 +72,12 @@ export default function Navbar() {
                 open={open}
             >
                 <DrawerHeader>
-                    <IconButton onClick={handleDrawerClose} >
-                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'ltr' ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
                     </IconButton>
                 </DrawerHeader>
                 <List>
-                    { menuItems.map(({text, href, icon}) => (
+                    {menuItems.map(({text, href, icon}) => (
                         <ListItem key={href}
                                   onClick={() => {
                                       router.push(href)
@@ -128,7 +88,7 @@ export default function Navbar() {
                                 <ListItemIcon>
                                     {icon()}
                                 </ListItemIcon>
-                                <ListItemText primary={text} />
+                                <ListItemText primary={text}/>
                             </ListItemButton>
                         </ListItem>
                     ))}
@@ -138,6 +98,55 @@ export default function Navbar() {
     );
 }
 
+
+const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})<AppBarProps>(({theme, open}) => ({
+    transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: `${drawerWidth}px`,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+const DrawerHeader = styled('div')(({theme}) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+}));
+
+const StyledButton = styled((props) => <IconButton
+    aria-label="open drawer"
+    edge="end" {...props} />)<{ open: boolean, onClick: Function, children: React.ReactElement }>`
+  background-color: rgba(1, 1, 1, 0);
+  margin-right: 16px;
+  display: ${(props) => props.open ? 'none' : 'inherit'};
+
+  &:hover {
+    background-color: grey !important;
+    color: #fff;
+  }
+
+,
+
+`
+
+
+const HeaderLabel = styled((props) =>
+    <Typography variant="h6" noWrap component="div"{...props}/>)<{ children: string }>`
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%)
+`
 
 interface AppBarProps extends MuiAppBarProps {
     open?: boolean;

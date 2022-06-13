@@ -40,7 +40,7 @@ const Circle = styled((props: InnerCircleProps) => <Box {...props}/>)`
   background-color: ${props => props.i === props.active ? COLOR_ACTIVE : 'white'};
   border-width: 1px;
   border-style: solid;
-  border-color: ${props => props.i < props.active ? COLOR_ACTIVE : COLOR_NORMAL};
+  border-color: ${props => props.i <= props.active ? COLOR_ACTIVE : COLOR_NORMAL};
   color: ${props => props.i < props.active ? COLOR_ACTIVE : COLOR_NORMAL};
 `
 const Label = styled((props: InnerProps) => <Box {...props}/>)`

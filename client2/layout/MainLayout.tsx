@@ -1,7 +1,7 @@
 import Head from "next/head";
 import React from "react";
 import styled from "styled-components";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/Navber/Navbar";
 
 
 const MainLayout: React.FC<Props> = ({title, description, keywords, children, marginLeft=100}) => {

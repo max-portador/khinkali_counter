@@ -48,8 +48,8 @@ const DropArea: FC<PropsType> = ({setPicture, picture, text, textWidth, minHeigh
         >
             {
                 picture ? <>
-                        <UploadedImg src={createSrc(picture)} className='galleryImage'/>
-                        <img src={createSrc(picture)} alt={'photo here'} className='galleryImage'/>
+                        <BlurImage src={createSrc(picture)}/>
+                        <UploadedImage src={createSrc(picture)} alt={'photo here'}/>
                     </>
                     : <Typography
                         width={textWidth}
@@ -98,12 +98,18 @@ const Container = styled.div<{ minHeight?: string | number }>`
 
 `
 
-const UploadedImg = styled.img`
+const BlurImage = styled.img`
   position: absolute;
   width: 98%;
   height: 98%;
   object-fit: fill;
   filter: blur(10px);
+`
+
+const UploadedImage = styled.img`
+  position: absolute;
+  height: 100%;
+  object-fit: scale-down;
 `
 
 const Clear = styled((props) => <CancelPresentationRoundedIcon {...props} fontSize='large' color='error'/>)`

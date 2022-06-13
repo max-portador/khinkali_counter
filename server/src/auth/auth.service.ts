@@ -45,13 +45,13 @@ export class AuthService {
         return this.userService._getUserDetail(user)
     }
 
-    async login(existingUser: ExistingUserDTO): Promise<{ token: string } | null> {
+    async login(existingUser: ExistingUserDTO): Promise<{ token: string, user: string } | null> {
         const {email, password} = existingUser;
         const user = await this.validateUser(email, password)
 
         if (!user) return null;
 
         const jwt = await this.jwtService.signAsync({ user });
-        return { token: jwt };
+        return { token: jwt, user: user.name};
     }
 }

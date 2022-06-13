@@ -3,10 +3,12 @@ import {Context, createWrapper, HYDRATE} from "next-redux-wrapper";
 import {ThunkDispatch} from "redux-thunk";
 import eventsReducer, {EventsActionsType} from "./reducers/eventsReducer";
 import {configureStore} from "@reduxjs/toolkit";
+import authReducer, {AuthActionsType} from "./reducers/authReducer";
 
 
 export const rootReducer = combineReducers( {
     event: eventsReducer,
+    auth: authReducer,
 })
 
 const reducer = (state, action) => {
@@ -36,4 +38,5 @@ export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = Dispatch<AllActions> & ThunkDispatch<RootState, void, AllActions>
 export type InferActionsType<T> = T extends {[key: string]: (...args: any[]) => infer U} ? U : never
 export type NextThunkDispatch = ThunkDispatch<RootState, void, AnyAction>
-export type AllActions = EventsActionsType
+export type AllActions = EventsActionsType |
+    AuthActionsType
