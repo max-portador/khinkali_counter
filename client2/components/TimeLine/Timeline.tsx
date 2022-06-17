@@ -62,6 +62,11 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
                         transition: 'transform .3s ease-in'
                     }}>
                         <Scale width={scaleWidth()} />
+                        <Scale width={scaleWidth(events.length)} style={{
+                            backgroundColor: 'grey',
+                            position: 'fixed',
+                            zIndex: -1
+                        }} />
                         <ProgressBar ref={progressBarRef}>
                             {
                                 events.map((event, i) => (
@@ -70,7 +75,7 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
                                               event={event}
                                               i={i}
                                               onClick={() => clickHandler(i)}
-                                              viewPortWidth={progressBarWidth}
+                                              viewportwidth={progressBarWidth}
                                               active={active}
                                     >
                                         {formatDate(event.date, EditOptions)}

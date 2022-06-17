@@ -19,7 +19,6 @@ import HomeIcon from '@mui/icons-material/Home';
 import TableRowsIcon from '@mui/icons-material/TableRows';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {useRouter} from "next/router";
-import {Button} from "@mui/material";
 import AuthDialog from "./AuthDialog";
 
 export const drawerWidth = 240;

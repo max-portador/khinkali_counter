@@ -2,7 +2,7 @@ import {createEvent, deleteEvent, eventsActions, fetchEvents, updateEvent} from 
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../store";
 import {bindActionCreators} from "redux";
-import {authActions, login} from "../store/reducers/authReducer";
+import {authActions, login, logout} from "../store/reducers/authReducer";
 
 const ActionCreators = {
     ...eventsActions,
@@ -11,7 +11,8 @@ const ActionCreators = {
     updateEvent,
     deleteEvent,
     ...authActions,
-    login
+    login,
+    logout
 }
 
 export const useActions = () => {

@@ -106,6 +106,6 @@ const Container = styled.div`
   align-items: center;
   padding-right: 20vw;
 `
-const NextImage =styled((props) => <Image  layout={'fill'}  {...props}/>)`
+const NextImage =styled((props) => <Image priority={true}  layout={'fill'}  {...props}/>)`
   object-fit: scale-down;
 `

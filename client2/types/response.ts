@@ -1,3 +1,4 @@
 export enum StatusCode {
-    'OK'= 200
+    'OK'= 200,
+    'Unauthorized'= 401
 }
