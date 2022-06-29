@@ -6,16 +6,15 @@ import {ModifiedEvent} from "../../types/event";
 
 
 export const LineItem: FC<OuterPropsType> = (props) => {
-const {children, total, event, i, active, viewportwidth, onClick } = props
-
+    const {children, total, event, i, active, viewportwidth,  onClick} = props
     return <StyledListItem event={event} i={i} onClick={onClick}
                            active={active} total={total}
                            viewportwidth={viewportwidth}
     >
         <Circle i={i} active={active}/>
-        <Label i={i} active={active}>
-            {children}
-        </Label>
+         <Label i={i} active={active}>
+                {children}
+            </Label>
     </StyledListItem>
 }
 
@@ -27,7 +26,7 @@ const StyledListItem = styled((props: ItemPropsType) => {
 })`
   margin-right: ${(props => props.i === props.total - 1
           ? 20
-          : (20 * props.event.daysToNext) % props.viewportwidth + 'px')};
+          : (20 * props.event.daysFromPrev) % props.viewportwidth + 'px')};
   margin-left: ${(props => props.i === 0 ? '20px' : 0)};
   z-index: 1;
 `
@@ -85,4 +84,5 @@ type InnerProps = {
     i: number,
     active: number,
     children?: React.ReactNode,
+    ref: any
 }

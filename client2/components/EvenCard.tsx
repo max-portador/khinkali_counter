@@ -40,10 +40,10 @@ const EvenCard: FC<PropsType> = ({event}) => {
                             {`${event.amount} хинкали`}
                         </Typography>
                     </Grid>
-                    {!!event.daysToNext &&
+                    {!!event.daysFromPrev &&
                         <Stack>
-                            <div>{'До следующего'}</div>
-                            <div>{days_label(event.daysToNext)}</div>
+                            <div>{'Предыдущий был'}</div>
+                            <div>{days_label(event.daysFromPrev)} назад</div>
                         </Stack>
                     }
 

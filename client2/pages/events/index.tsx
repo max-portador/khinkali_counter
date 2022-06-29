@@ -1,5 +1,5 @@
 import {Button, Grid} from '@mui/material';
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import MainLayout from "../../layout/MainLayout";
 import {NextThunkDispatch, wrapper} from "../../store";
 import {fetchEvents} from "../../store/reducers/eventsReducer";
@@ -15,11 +15,38 @@ import {CenteredStack} from "./create";
 const EventList = () => {
     const {events} = useTypedSelectors(state => state.event)
     const router = useRouter()
+
+    const [eventsRendered, setEventsRendered] = useState(3)
+    const [isFetching, setIsFetching] = useState(false)
+
+    const scrollHandler = (e) => {
+        const pageHeight = e.target.documentElement.scrollHeight;
+        const scrollPosition = e.target.documentElement.scrollTop;
+        if (pageHeight - 10 < scrollPosition + window.innerHeight){
+            setIsFetching(true)
+        }
+    }
+
+
     const clickButtonHandler = async (e: ChangeEvent<HTMLButtonElement>) => {
         e.preventDefault()
         e.stopPropagation()
         await router.push('events/create')
     }
+
+    useEffect(() => {
+        document.addEventListener('scroll', scrollHandler)
+        return function() {
+            document.removeEventListener('scroll', scrollHandler)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (isFetching && eventsRendered <= events.length){
+            setEventsRendered((prev) => prev + 3)
+            setIsFetching(false)
+        }
+    }, [isFetching])
 
     return (
         <MainLayout>
@@ -30,7 +57,7 @@ const EventList = () => {
                     </Grid>
                     <CenteredStack direction={'column'} gap={3} >
                         {
-                            events && preparedEvents(events)
+                            events && preparedEvents(events.filter( (_, i) => i < eventsRendered))
                                 .map(event => <EvenCard key={event._id} event={event}/>)
                         }
                     </CenteredStack>
@@ -47,7 +74,7 @@ export default EventList;
 
 export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
     const dispatch = store.dispatch as NextThunkDispatch
-    await dispatch(await fetchEvents())
+        await dispatch(await fetchEvents())
     return null
 })
 

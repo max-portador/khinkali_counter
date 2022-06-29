@@ -13,12 +13,16 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
     const [x, setX] = useState(0)
     const [progressBarWidth, setProgressBarWidth] = useState(null)
     let progressBarRef = useRef<HTMLDivElement>(null)
+    let itemRef = useRef<HTMLDivElement>(null)
+
 
     useEffect(() => {
-        if (progressBarRef){
+        if (progressBarRef) {
             setProgressBarWidth(progressBarRef.current.offsetWidth)
+
         }
     }, [progressBarRef])
+
 
     const clickHandler = function (index: number) {
         setActive(([prev, direction]) => {
@@ -28,49 +32,53 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
     }
     const moveProgressBar = (sh: number) => {
         let delta = Math.sign(sh) * progressBarWidth
-        let minShift = progressBarWidth -scaleWidth(events.length) - 10
+        let minShift = progressBarWidth - scaleWidth(events.length) - 10
         let maxShift = 0
-            setX((x) => maxShift  - 40 <= x + delta
+        setX((x) => maxShift - 40 <= x + delta
             ? maxShift
             : x + delta <= minShift + 40
-                        ? minShift
-                        : x + delta)
+                ? minShift
+                : x + delta)
 
     }
 
     const scaleWidth = (index: number = active) => {
-        if (index === 0) { return 1 }
+        if (index === 0) {
+            return 1
+        }
         let marginsSum = events.slice(0, index)
             .reduce((acc, event) => {
-                return (20 * event.daysToNext) % progressBarWidth + acc}, 0)
+                return (20 * event.daysFromPrev) % progressBarWidth + acc
+            }, 0)
         return marginsSum + (15 * index) - 7
     }
+
 
 
     return (
         <>
             <Wrapper>
                 <IconButton aria-label="back"
-                            onClick={() =>  moveProgressBar(1)}
+                            onClick={() => moveProgressBar(1)}
                             disabled={x === 0}
                 >
                     <ArrowBackIosRoundedIcon/>
                 </IconButton>
-                <Container>
+                <Container ref={itemRef}>
                     <div style={{
                         transform: `translateX(${x}px)`,
                         transition: 'transform .3s ease-in'
                     }}>
-                        <Scale width={scaleWidth()} />
+                        <Scale width={scaleWidth()}/>
                         <Scale width={scaleWidth(events.length)} style={{
                             backgroundColor: 'grey',
                             position: 'fixed',
                             zIndex: -1
-                        }} />
+                        }}/>
                         <ProgressBar ref={progressBarRef}>
                             {
-                                events.map((event, i) => (
-                                    <LineItem key={formatDate(event.date, EditOptions)}
+                                events.map((event, i) => {
+                                    const item = <LineItem key={formatDate(event.date, EditOptions)}
                                               total={events.length}
                                               event={event}
                                               i={i}
@@ -80,7 +88,9 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
                                     >
                                         {formatDate(event.date, EditOptions)}
                                     </LineItem>
-                                ))
+
+                                    return item
+                                })
                             }
                         </ProgressBar>
                     </div>
@@ -88,7 +98,7 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
                 </Container>
                 <IconButton aria-label="forward"
                             disabled={scaleWidth(events.length) <= -x + progressBarWidth}
-                            onClick={() =>  moveProgressBar(-1)}>
+                            onClick={() => moveProgressBar(-1)}>
                     <ArrowForwardIosRounded/>
                 </IconButton>
             </Wrapper>
@@ -117,7 +127,7 @@ const Container = styled.div`
   overflow-x: hidden;
 `
 
-const Scale = styled.div<{width: number}>`
+const Scale = styled.div<{ width: number }>`
   background-color: darkred;
   height: 3px;
   position: relative;

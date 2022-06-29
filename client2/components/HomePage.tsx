@@ -8,7 +8,7 @@ import {Stack} from "@mui/material";
 
 const HomePage: FC = () => {
     const {events} = useTypedSelectors(state => state.event)
-    const modifiedEvents = preparedEvents(events)
+    const modifiedEvents = preparedEvents(events).reverse()
 
     const [[activeEvent, direction], setEvent] = useState<[number, number]>([0, 0])
 

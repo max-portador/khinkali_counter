@@ -7,5 +7,5 @@ export interface IEvent{
 
 export interface ModifiedEvent extends IEvent{
     minAmount: number,
-    daysToNext: number
+    daysFromPrev: number
 }
