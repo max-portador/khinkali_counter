@@ -4,6 +4,8 @@ import {Button, Dialog, Grid, TextField, Typography} from "@mui/material";
 import {useTypedSelectors} from "../../hooks/useTypedSelectors";
 import {useActions} from "../../hooks/useActions";
 import {useFormik} from "formik";
+import { useCookies } from "react-cookie"
+
 
 const validationSchema = yup.object({
     email: yup
@@ -17,15 +19,17 @@ const validationSchema = yup.object({
 
 
 const AuthDialog = () => {
-    const {name} = useTypedSelectors(state => state.auth)
+    const {name, isAuth} = useTypedSelectors(state => state.auth)
     const {logout, login} = useActions()
     const [isOpen, setIsOpen] = useState(!!name)
+    const [cookie, setCookie] = useCookies(["token"])
+
 
     useEffect(() => {
-        if (name) {
+        if (isAuth) {
             setIsOpen(false)
         }
-    }, [name])
+    }, [isAuth])
 
     const formik = useFormik({
         initialValues: {
@@ -37,10 +41,17 @@ const AuthDialog = () => {
             const {email, password} = values
             login(email, password)
 
-            if (name) {
+            if (!name) {
                 formikHelpers.setSubmitting(false)
                 formikHelpers.setErrors({password: 'wrong email ', email: 'or wrong password'})
             }
+
+            const token = localStorage.getItem('token')
+            setCookie("token", JSON.stringify(token), {
+                path: "/",
+                maxAge: 3600, // Expires after 1hr
+                sameSite: true,
+            })
         },
     });
 
@@ -57,7 +68,7 @@ const AuthDialog = () => {
                           direction={'column'}
                           alignItems='center'
                     >
-                        <Typography color={'primary'} variant='h5'>Вход </Typography>
+                        <Typography color={'primary'} variant='h5'> Вход </Typography>
                         <TextField
                             fullWidth
                             id="email"
@@ -85,25 +96,30 @@ const AuthDialog = () => {
                     </Grid>
                 </form>
             </Dialog>
-            {name
+            {isAuth
                 ? <Grid container alignSelf='center' alignItems='center' justifyContent='end'>
                     <Typography
                         sx={{
-                            right: 280,
+                            right: '15vw',
                             position: 'fixed',
                             textDecoration: 'hasDunderPages'
                         }}>
                         {name}
                     </Typography>
-                    <AuthButton user={name} onClick={() => {
+                    <AuthButton onClick={() => {
                         logout()
-                    }}/>
+                    }}>
+                        Logout
+                    </AuthButton>
+
                 </Grid>
 
-                : <AuthButton user={name} onClick={() => {
+                : <AuthButton buttonText={isAuth} onClick={() => {
                     setIsOpen(true)
                 }
-                }/>
+                }>
+                    Login
+                </AuthButton>
 
             }
         </>
@@ -119,15 +135,13 @@ const AuthButton = (props) => {
                        backgroundColor: 'white',
                        color: '#333',
                        position: 'fixed',
-                       right: 120,
+                       right: 60,
                        width: 120,
                        '&:hover': {
                            backgroundColor: 'grey !important',
                            color: '#fff'
                        },
-                   }}>
-        {props.user ? 'Logout' : 'Login'}
-    </Button>
+                   }}/>
 }
 
 

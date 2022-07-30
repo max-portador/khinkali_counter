@@ -61,7 +61,6 @@ export const createEvent = (formData: FormData): ThunkAction<void, RootState, un
     async (dispatch) => {
         try{
             const event = await eventsAPI.create(formData)
-            debugger
             if (event){
                 dispatch(fetchEvents())
                 return event

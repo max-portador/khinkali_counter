@@ -5,6 +5,7 @@ import Navbar from "../components/Navber/Navbar";
 
 
 const MainLayout: React.FC<Props> = ({title, description, keywords, children, marginLeft=100}) => {
+
     return (
         <>
             <Head>

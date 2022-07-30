@@ -3,15 +3,16 @@ import {ThunkAction} from "redux-thunk";
 import {authApi} from "../../api/authApi";
 
 const initialState = {
-    name: null as string | null
+    name: null as string | null,
+    isAuth: false,
 }
 
 const authReducer = (state = initialState, action: AuthActionsType): AuthStateType => {
     switch (action.type) {
         case AuthActionsEnum.SET_USER:
-            return {...state, name: action.payload}
+            return {...state, name: action.payload, isAuth: true}
         case AuthActionsEnum.CLEAR_USER:
-            return {...state, name: null}
+            return {...state, name: null, isAuth: false}
         default:
             return state
     }
@@ -47,6 +48,19 @@ export const logout = (): ThunkAction<void, RootState, unknown, AuthActionsType>
         }
         catch (e) {
             console.log(e, "Произошла ошибка при выходе из профиля")
+        }
+    }
+
+export const auth = (): ThunkAction<void, RootState, unknown, AuthActionsType> =>
+    async (dispatch) => {
+        try{
+            const name = await authApi.auth();
+            if (name) {
+                dispatch(authActions.setUser(name))
+            }
+        }
+        catch (e) {
+            console.log(e, "неавторизован")
         }
     }
 

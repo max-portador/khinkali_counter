@@ -109,6 +109,7 @@ const BlurImage = styled.img`
 const UploadedImage = styled.img`
   position: absolute;
   height: 100%;
+  width: 100%;
   object-fit: scale-down;
 `
 

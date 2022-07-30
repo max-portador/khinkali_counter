@@ -3,12 +3,12 @@ import MainLayout from "../../layout/MainLayout";
 import {Button, Stack, TextField} from "@mui/material";
 import styled from "styled-components";
 import DropArea from "../../components/DropArea";
-import {eventsAPI} from "../../api/eventsApi";
 import {StatusCode} from "../../types/response";
 import {Notification} from "../../components/Notification";
 import StyledDatePicker from "../../components/StyledDatePicker";
 import ImgUrlDialog from "../../components/ImgURLDialog";
 import {useActions} from "../../hooks/useActions";
+import {createFileFromURL} from "../../utils/helpers";
 
 const CreateEvent = () => {
 
@@ -34,12 +34,7 @@ const CreateEvent = () => {
         formData.append('date', String(eventDate))
 
         if (typeof picture === "string"){
-            const params = new Proxy(new URLSearchParams(picture), {
-                get: (searchParams, prop: string) => searchParams.get(prop),
-            });
-            let format = params['format'] || 'jpg';
-            let blobFile = await fetch(picture).then(r => r.blob())
-            let file = new File([blobFile], `1.${format}`, { type: `image/${format}` })
+            let file = await createFileFromURL(picture)
             formData.append('image', file)
         }
         else {
@@ -53,15 +48,16 @@ const CreateEvent = () => {
         const formData = await createFormData();
 
         setIsPosting(true)
+
         let event = createEvent(formData)
 
         if (event) {
-
             setStatus(StatusCode.OK)
             setPicture(null)
         } else {
             setStatus(500)
         }
+
         setIsPosting(false)
         setAlertIsOpen(true)
     }
@@ -81,9 +77,10 @@ const CreateEvent = () => {
                         />
 
                         <Button variant={'outlined'} onClick={()=> setIsOpenURL(true)}>
-                            Загрузить изображение по ссылке
+                            Загрузить изображение по ссылке из Twitter
                         </Button>
                         <ImgUrlDialog isOpen={isOpenURL} setIsOpen={setIsOpenURL} setFile={setPicture}/>
+
                         <StyledDatePicker eventDate={eventDate} setEventDate={setEventDate}/>
                     </CenteredStack>
                 <DropArea picture={picture} setPicture={setPicture}/>

@@ -84,9 +84,11 @@ export default function Navbar() {
                                   disablePadding
                         >
                             <ListItemButton>
+
                                 <ListItemIcon>
                                     {icon()}
                                 </ListItemIcon>
+
                                 <ListItemText primary={text}/>
                             </ListItemButton>
                         </ListItem>

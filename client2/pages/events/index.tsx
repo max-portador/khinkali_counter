@@ -26,8 +26,6 @@ const EventList = () => {
             setIsFetching(true)
         }
     }
-
-
     const clickButtonHandler = async (e: ChangeEvent<HTMLButtonElement>) => {
         e.preventDefault()
         e.stopPropagation()
@@ -57,7 +55,7 @@ const EventList = () => {
                     </Grid>
                     <CenteredStack direction={'column'} gap={3} >
                         {
-                            events && preparedEvents(events.filter( (_, i) => i < eventsRendered))
+                            events && preparedEvents(events.filter( (_, i) => i > events.length - 1 - eventsRendered))
                                 .map(event => <EvenCard key={event._id} event={event}/>)
                         }
                     </CenteredStack>
