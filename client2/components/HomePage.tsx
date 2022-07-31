@@ -16,6 +16,12 @@ const HomePage: FC = () => {
         setEvent([activeEvent + newDirection, newDirection]);
     }
 
+    if (events.length === 0){
+        return <>
+            <h1>Пока здесь нет ни одного события</h1>
+        </>
+    }
+
     return <>
         <Stack width={1200}>
             <Timeline

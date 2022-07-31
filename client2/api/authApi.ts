@@ -1,56 +1,58 @@
 import {instance} from "./baseApi";
-import axios from "axios";
+import {IUserDetail} from "../types/user";
+
 
 export const authApi = {
-    login: async (email: string, password: string): Promise<string> => {
+    login: async (email: string, password: string): Promise<IUserDetail> => {
         try {
-            const response = await instance.post<ILoginResponse>('auth/login', {
+            const response = await instance.post<ILoginResponce>('/auth/login', {
                 email,
                 password
             })
-
-            await fetch('/auth/login', {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({'token': response.data.token})
-            })
-            localStorage.setItem('token', response.data.token)
-
-            instance.defaults.headers.post['Authorization'] = `Bearer ${response.data.token}`
-            instance.defaults.headers.delete['Authorization'] = `Bearer ${response.data.token}`
-            instance.defaults.headers.put['Authorization'] = `Bearer ${response.data.token}`
+            localStorage.setItem('token', response.data?.access_token)
             return response.data.user
         } catch
             (e: any) {
-            console.log(e + ' Произошла ошибка при попытке авторизации')
+            alert(e)
         }
     },
 
-    auth: async (): Promise<string | null> => {
+    logout: async (user: IUserDetail): Promise<boolean> => {
         try {
-            let token = localStorage.getItem('token')
-            const response = await instance.get<IAuthResponse>(`auth/${token}`)
+            const response = await instance.post<boolean>('/auth/logout', {
+               user
+            })
+            localStorage.removeItem('token')
             const data = await response.data
-            if (data.exp > Date.now()) {
-                localStorage.removeItem('token')
-                return null
+            if (data ){
+                return true
             }
-            return data.user.name
-        } catch (e) {
-            console.log(e + ' Произошла ошибка при попытке авторизации')
+            else throw new Error()
+        } catch
+            (e: any) {
+            alert(e)
+        }
+    },
+
+    checkAuth: async (user: IUserDetail): Promise<IUserDetail> => {
+        try{
+            const response  = await instance.post<ILoginResponce>('/auth/refresh', {
+                user
+            })
+            localStorage.setItem('token', response.data?.access_token)
+            return response.data.user
+        }
+        catch (e) {
+            console.log(e.response?.data?.message)
         }
     }
+
+
 }
 
 
-export interface ILoginResponse {
-    token: string,
-    user: string
+export interface ILoginResponce {
+    user: IUserDetail;
+    access_token: string;
 }
 
-export interface IAuthResponse {
-    user: { name: string }
-    exp: number
-}

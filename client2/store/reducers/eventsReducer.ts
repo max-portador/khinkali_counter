@@ -50,6 +50,7 @@ export const fetchEvents = (): ThunkAction<void, RootState, unknown, EventsActio
     async (dispatch) => {
     try{
         const events = await eventsAPI.fetchEvents()
+        if (events)
         dispatch(eventsActions.setEvents(events))
 
     } catch (e) {

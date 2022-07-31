@@ -26,6 +26,8 @@ const EventList = () => {
             setIsFetching(true)
         }
     }
+
+
     const clickButtonHandler = async (e: ChangeEvent<HTMLButtonElement>) => {
         e.preventDefault()
         e.stopPropagation()
@@ -55,7 +57,7 @@ const EventList = () => {
                     </Grid>
                     <CenteredStack direction={'column'} gap={3} >
                         {
-                            events && preparedEvents(events.filter( (_, i) => i > events.length - 1 - eventsRendered))
+                            events.length && preparedEvents(events.filter( (_, i) => i < eventsRendered))
                                 .map(event => <EvenCard key={event._id} event={event}/>)
                         }
                     </CenteredStack>
@@ -70,11 +72,11 @@ const EventList = () => {
 
 export default EventList;
 
-export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
-    const dispatch = store.dispatch as NextThunkDispatch
-        await dispatch(await fetchEvents())
-    return null
-})
+// export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+//     const dispatch = store.dispatch as NextThunkDispatch
+//         await dispatch(await fetchEvents())
+//     return null
+// })
 
 const AddButton = styled((props) => <Button size='small' variant={'contained'}
                                             {...props} startIcon={<AddCircleIcon/>}/>)`
