@@ -4,9 +4,9 @@ import {ILoginResponce} from "../../../api/authApi";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<{ access_token: string }>
+    res: NextApiResponse<ILoginResponce>
 ) {
     let backendRes = await instanceSSR.post<ILoginResponce>('auth/refresh' )
     let access_token = backendRes.data.access_token
-    res.status(200).json({ access_token} )
+    res.status(200).json(backendRes.data)
 }

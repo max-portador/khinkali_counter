@@ -71,13 +71,16 @@ export const logout = (user: IUserDetail): ThunkAction<void, RootState, unknown,
         }
     }
 
-export const checkAuth = (currentUser: IUserDetail): ThunkAction<void, RootState, unknown, AuthActionsType> =>
+export const me = (): ThunkAction<void, RootState, unknown, AuthActionsType> =>
     async (dispatch) => {
         try {
             dispatch(authActions.setIsLoading(true))
-            const user = await authApi.checkAuth(currentUser)
-            dispatch(authActions.setUser(user))
-            dispatch(authActions.setIsAuth(false))
+            const user = await authApi.me()
+            console.table(user)
+            if (user?.name) {
+                dispatch(authActions.setUser(user))
+                dispatch(authActions.setIsAuth(true))
+            }
         }
         catch (e) {
             console.log(e, "Произошла ошибка при авторизации")

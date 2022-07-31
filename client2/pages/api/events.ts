@@ -21,7 +21,6 @@ export default function handler(req: NextApiRequest,
 async function getHandler(req: NextApiRequest,
                     res: NextApiResponse<IEvent[]>){
 
-    const backendRequest = await instanceSSR.get('/events')
-    console.log('wewert' + backendRequest.data)
+    const backendRequest = await instanceSSR.get<IEvent[]>('/events')
     res.status(200).json(backendRequest.data)
 }

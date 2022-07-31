@@ -43,7 +43,7 @@ const Timeline: FC<PropsType> = ({active, setActive, events}) => {
     }
 
     const scaleWidth = (index: number = active) => {
-        if (index === 0) {
+        if (index === 0 || isNaN(index)) {
             return 1
         }
         let marginsSum = events.slice(0, index)

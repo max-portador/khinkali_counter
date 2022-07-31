@@ -2,18 +2,17 @@ import React, {useEffect} from 'react';
 import HomePage from "../components/HomePage";
 import MainLayout from "../layout/MainLayout";
 import {NextThunkDispatch, wrapper} from "../store";
-import {fetchEvents} from "../store/reducers/eventsReducer";
-import {checkAuth} from "../store/reducers/authReducer";
-import axios from "axios";
-import {instance} from "../api/baseApi";
-import {useDispatch} from "react-redux";
-import {useActions} from "../hooks/useActions";
+import {eventsActions} from "../store/reducers/eventsReducer";
+import {me} from "../store/reducers/authReducer";
+import {instanceSSR} from "../api/baseApi";
+import {IEvent} from "../types/event";
 
 const Index = () => {
-    const { fetchEvents} = useActions()
     useEffect(() => {
-        fetchEvents()
+        me()
+        console.log('me!!!')
     }, [])
+
     return <MainLayout marginLeft={0}>
         <HomePage/>
     </MainLayout>
@@ -22,14 +21,18 @@ const Index = () => {
 export default Index
 
 
-// export const getServerSideProps = wrapper.getServerSideProps(store => async ({res}) => {
-//     const dispatch = store.dispatch as NextThunkDispatch
-//     // const {user, isAuth } = store.getState().auth
-//     // if (!isAuth){
-//     //     await dispatch(await checkAuth(user))
-//     // }
-//     console.log('1')
-//     await axios.get('api/events')
-//
-//     return null
-// })
+export const getServerSideProps = wrapper.getServerSideProps(
+    (store) => async (ctx) => {
+        const dispatch = store.dispatch as NextThunkDispatch
+
+        try {
+            let response = await instanceSSR.get<IEvent[]>('/events')
+            let events = response.data
+            dispatch(eventsActions.setEvents(events))
+        } catch (e) {
+            console.log('FFFFFFFFFFFFFFFFFF')
+            console.log(e?.message)
+        }
+
+        return null
+    })
