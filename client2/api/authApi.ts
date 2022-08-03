@@ -6,7 +6,7 @@ import axios from "axios";
 export const authApi = {
     login: async (email: string, password: string): Promise<IUserDetail> => {
         try {
-            const response = await instance.post<ILoginResponce>('/auth/login', {
+            const response = await instance.post<ILoginResponse>('/auth/login', {
                 email,
                 password
             })
@@ -37,16 +37,15 @@ export const authApi = {
     me: async (): Promise<IUserDetail> => {
         try {
             if (localStorage.getItem('token')) {
-                const at = localStorage.getItem('token')
-                const response = await axios.post<ILoginResponce>('/auth/refresh', {},
-                    {
-                        headers: { 'Authorization': `Bearer ${at}` }
-                    })
+                const response = await instance.get<ILoginResponse>('auth/refresh')
 
                 console.table(response.status)
+                if (response.status === 200) {
+                    localStorage.setItem('token', response.data?.access_token)
+                    return response.data.user
+                }
+                else  { throw new Error()}
 
-                localStorage.setItem('token', response.data?.access_token)
-                return response.data.user
             }
 
         } catch (e) {
@@ -58,7 +57,7 @@ export const authApi = {
 }
 
 
-export interface ILoginResponce {
+export interface ILoginResponse {
     user: IUserDetail;
     access_token: string;
 }

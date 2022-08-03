@@ -1,12 +1,22 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {instanceSSR} from "../../../api/baseApi";
-import {ILoginResponce} from "../../../api/authApi";
+import {ILoginResponse} from "../../../api/authApi";
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ILoginResponce>
+    res: NextApiResponse<ILoginResponse>
 ) {
-    let backendRes = await instanceSSR.post<ILoginResponce>('auth/refresh' )
-    let access_token = backendRes.data.access_token
-    res.status(200).json(backendRes.data)
+    console.log('SSR REFRESH')
+    try {
+        let backendRes = await instanceSSR.get<ILoginResponse>('auth/refresh')
+        res.status(200).json(backendRes.data)
+    }
+    catch (error) {
+        if (error.response.status == 401) {
+            return res.status(401)
+        } else {
+            return error
+        }
+
+    }
 }

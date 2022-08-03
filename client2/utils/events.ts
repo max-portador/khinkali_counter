@@ -1,7 +1,7 @@
 import {IEvent, ModifiedEvent} from "../types/event";
 import {daysDiff, sortEventByDate} from "./dateHelper";
 
-export const addMinAmount = (acc, event: IEvent, i: number, arr: IEvent[]): ModifiedEvent[] => {
+export const addMinAmount = (acc: AccType, event: IEvent, i: number, arr: IEvent[]): AccType => {
     let daysFromPrev = 0
     if (i < arr.length - 1){
         daysFromPrev = daysDiff( arr[i + 1].date, event.date)
@@ -18,4 +18,10 @@ export const preparedEvents = (events: IEvent[], reverse=false): ModifiedEvent[]
         .sort(sortEventByDate)
         .reduce(addMinAmount, {minAmount: 1, events: []})
         .events
+}
+
+
+type AccType = {
+    minAmount: number,
+    events: ModifiedEvent[]
 }

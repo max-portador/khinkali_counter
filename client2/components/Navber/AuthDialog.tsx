@@ -35,7 +35,7 @@ const AuthDialog = () => {
         validationSchema: validationSchema,
         onSubmit: async (values: Values, formikHelpers) => {
             const {email, password} = values
-            login(email, password)
+            await login(email, password)
 
             if (!isAuth) {
                 formikHelpers.setSubmitting(false)

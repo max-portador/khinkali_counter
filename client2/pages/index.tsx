@@ -3,13 +3,14 @@ import HomePage from "../components/HomePage";
 import MainLayout from "../layout/MainLayout";
 import {NextThunkDispatch, wrapper} from "../store";
 import {eventsActions} from "../store/reducers/eventsReducer";
-import {me} from "../store/reducers/authReducer";
 import {instanceSSR} from "../api/baseApi";
 import {IEvent} from "../types/event";
+import {useActions} from "../hooks/useActions";
 
 const Index = () => {
+    const {me} = useActions()
     useEffect(() => {
-        me()
+        // me()
         console.log('me!!!')
     }, [])
 
