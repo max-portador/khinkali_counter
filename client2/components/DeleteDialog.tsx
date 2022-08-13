@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Dialog, Grid, Typography} from "@mui/material";
-import {IEvent} from "../types/event";
+import {ModifiedEvent} from "../types/event";
 import {CancelCornerIcon, DeleteButton} from "./common/styled";
 import {useActions} from "../hooks/useActions";
 
@@ -44,5 +44,5 @@ export default DeleteDialog;
 type PropsType = {
     isOpen: boolean,
     setIsOpen: Function,
-    event: IEvent,
+    event: ModifiedEvent,
 }

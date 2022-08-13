@@ -1,19 +1,20 @@
-import {createEvent, deleteEvent, eventsActions, fetchEvents, updateEvent} from "../store/reducers/eventsReducer";
+import {createEvent, deleteEvent, fetchEvents, updateEvent} from "../store/slices/events/actionCreators";
 import {useDispatch} from "react-redux";
 import {AppDispatch} from "../store";
 import {bindActionCreators} from "redux";
-import {authActions, login, logout, me} from "../store/reducers/authReducer";
+import {authSlice} from "../store/slices/auth/authReducer";
+import {login, logout} from "../store/slices/auth/actionCreators";
+import {eventsSlice} from "../store/slices/events/eventsReducer";
 
 const ActionCreators = {
-    ...eventsActions,
     fetchEvents,
     createEvent,
     updateEvent,
     deleteEvent,
-    ...authActions,
+    ...eventsSlice.actions,
     login,
     logout,
-    me
+    ...authSlice.actions
 }
 
 export const useActions = () => {

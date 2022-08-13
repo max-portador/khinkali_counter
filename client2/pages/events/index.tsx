@@ -2,7 +2,6 @@ import {Button, Grid} from '@mui/material';
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import MainLayout from "../../layout/MainLayout";
 import {NextThunkDispatch, wrapper} from "../../store";
-import {fetchEvents} from "../../store/reducers/eventsReducer";
 import {useTypedSelectors} from "../../hooks/useTypedSelectors";
 import EvenCard from "../../components/EvenCard";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -10,6 +9,11 @@ import styled from "styled-components";
 import {useRouter} from "next/router";
 import {preparedEvents} from "../../utils/events";
 import {CenteredStack} from "./create";
+import {eventsAPI} from "../../api/eventsApi";
+import {eventsSlice} from "../../store/slices/events/eventsReducer";
+import {fetcherSSR} from "../../api/fetcherSSR";
+import {IUserDetail} from "../../types/user";
+import {authSlice} from "../../store/slices/auth/authReducer";
 
 
 const EventList = () => {
@@ -72,9 +76,18 @@ const EventList = () => {
 
 export default EventList;
 
-// export const getServerSideProps = wrapper.getServerSideProps(store => async () => {
+// export const getServerSideProps = wrapper.getServerSideProps(store => async ({req, res}) => {
 //     const dispatch = store.dispatch as NextThunkDispatch
-//         await dispatch(await fetchEvents())
+//
+//     try {
+//         let events = await eventsAPI.fetchEventsSSR(req, res)
+//         if (events?.length ) {
+//             dispatch(eventsSlice.actions.setEvents(events))
+//         }
+//
+//     } catch (e) {
+//         console.log(e?.message)
+//     }
 //     return null
 // })
 

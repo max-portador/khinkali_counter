@@ -3,7 +3,7 @@ import MainLayout from "../../layout/MainLayout";
 import {Button, Stack, TextField} from "@mui/material";
 import styled from "styled-components";
 import DropArea from "../../components/DropArea";
-import {StatusCode} from "../../types/response";
+import {StatusCode} from "../../types/req_res";
 import {Notification} from "../../components/Notification";
 import StyledDatePicker from "../../components/StyledDatePicker";
 import ImgUrlDialog from "../../components/ImgURLDialog";
@@ -49,7 +49,7 @@ const CreateEvent = () => {
 
         setIsPosting(true)
 
-        let event = createEvent(formData)
+        let event = await createEvent(formData)
 
         if (event) {
             setStatus(StatusCode.OK)

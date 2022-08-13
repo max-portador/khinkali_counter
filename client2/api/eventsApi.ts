@@ -1,64 +1,98 @@
 import {IEvent} from "../types/event";
-import {instance} from "./baseApi";
+import {fetcher, instance} from "./baseApi";
+import {fetcherSSR} from "./fetcherSSR";
+import {RequestFunc, StatusCode} from "../types/req_res";
 
 export const eventsAPI = {
+    fetchEventsSSR: async(req, res): Promise<IEvent[]> => {
+        try {
+            let [errors, events] = await fetcherSSR.get<IEvent[]>(req, res, 'events')
+            if (!errors && events) {
+                return events
+            }
+            else {
+                throw errors
+            }
+        } catch (e) {
+            throw e
+        }
+    },
+
     fetchEvents: async(): Promise<IEvent[]> => {
         try {
-            const response = await instance.get<IEvent[]>('/events')
-            return response.data;
+            const request: RequestFunc = () => instance.get('events')
+            let [errors, events] = await fetcher<IEvent[]>(request)
+            if (!errors && events) {
+                return events
+            }
+            else {
+                throw errors
+            }
         } catch (e) {
-            console.log(e, 'Произошла ошибка при запросе событий')
+            throw e
         }
-
     },
 
     create: async(formData: FormData): Promise<IEvent> => {
         try {
-            const token = localStorage.getItem('token')
-            const response = await instance.post<IEvent>('/events', formData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data' ,
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-            return response.data
+            const request: RequestFunc = () => instance.post<IEvent>('/events', formData, {
+                headers: {'Content-Type': 'multipart/form-data'}
+            })
+
+            const [errors, events] = await fetcher<IEvent>(request)
+
+
+            if (!errors && events) {
+                return events
+            }
+            else {
+                throw errors
+            }
         }
         catch (e) {
-            console.log(e, 'Произошла ошибка при создании события')
+            throw e
         }
     },
 
     update: async(formData: FormData): Promise<IEvent> => {
         try {
-            const token = localStorage.getItem('token')
 
-            const response = await instance.put<IEvent>('/events', formData,
+            const request: RequestFunc = () => instance.put<IEvent>('/events', formData,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${token}`
                     }
                 })
-            return response.data
+
+            const [errors, events] = await fetcher<IEvent>(request)
+
+            if (!errors && events) {
+                return events
+            }
+            else {
+                throw errors
+            }
         }
         catch (e) {
-            console.log(e, 'Произошла ошибка при создании события')
+            throw e
         }
     },
 
-    delete: async (id: string): Promise<number> => {
+    delete: async (id: string): Promise<StatusCode> => {
         try {
-            const token = localStorage.getItem('token')
-            const response = await instance.delete<string>(`/events/${id}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            return response.status
+            const request: RequestFunc = () => instance.delete<string>(`/events/${id}`)
+            const [errors, removed_id] = await fetcher<string>(request)
+
+
+            if (!errors && removed_id) {
+                return StatusCode.OK
+            }
+            else {
+                throw errors
+            }
         }
         catch (e) {
-            console.log(e, 'Произошла ошибка при удалении события')
+            throw e
         }
     }
 }

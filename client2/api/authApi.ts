@@ -1,29 +1,33 @@
-import {instance} from "./baseApi";
+import {fetcher, instance} from "./baseApi";
 import {IUserDetail} from "../types/user";
-import axios from "axios";
+import {fetcherSSR} from "./fetcherSSR";
 
 
 export const authApi = {
     login: async (email: string, password: string): Promise<IUserDetail> => {
         try {
-            const response = await instance.post<ILoginResponse>('/auth/login', {
-                email,
-                password
-            })
-            localStorage.setItem('token', response.data?.access_token)
-            return response.data.user
+
+            let request = () => instance.post( 'auth/login', {email, password})
+
+            const [errors, user] = await fetcher<IUserDetail>(request)
+
+            if (!errors && user) {
+                return user
+            }
+            else {
+                throw errors
+            }
         } catch
             (e: any) {
-            alert(e)
+            alert(e.message)
         }
     },
 
     logout: async (user: IUserDetail): Promise<boolean> => {
         try {
             const response = await instance.post<boolean>('/auth/logout', {
-                user
+                userId: user.id
             })
-            localStorage.removeItem('token')
             const data = await response.data
             if (data) {
                 return true
@@ -34,19 +38,13 @@ export const authApi = {
         }
     },
 
-    me: async (): Promise<IUserDetail> => {
+    me: async (req, res): Promise<IUserDetail> => {
         try {
-            if (localStorage.getItem('token')) {
-                const response = await instance.get<ILoginResponse>('auth/refresh')
-
-                console.table(response.status)
-                if (response.status === 200) {
-                    localStorage.setItem('token', response.data?.access_token)
-                    return response.data.user
-                }
-                else  { throw new Error()}
-
+            let [errors, user] = await fetcherSSR.get<IUserDetail>(req, res, 'auth/me')
+            if (!errors && user){
+                return user
             }
+            else throw errors
 
         } catch (e) {
             console.log(e.response?.data?.message)

@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useState} from "react";
-import {StatusCode} from "../types/response";
+import {StatusCode} from "../types/req_res";
 import {Alert, Slide, SlideProps, Snackbar} from "@mui/material";
 
 

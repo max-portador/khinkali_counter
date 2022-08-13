@@ -1,41 +1,49 @@
-import axios from "axios";
-import {ILoginResponse} from "./authApi";
+import axios, {AxiosResponse} from "axios";
+import {QueryResponse, RequestFunc, StatusCode} from "../types/req_res";
 
 
-// export const serverURL = process.env.SERVER_URL || 'http://localhost:5555';
-export const serverURL = process.env.SERVER_URL || 'http://localhost:5555/';
+export const serverURL = process.env.SERVER_URL || 'http://localhost:5555';
+// export const serverURL = process.env.SERVER_URL
 
 export const instance = axios.create({
-    baseURL: '/api'
-})
-
-export const instanceSSR = axios.create({
     baseURL: serverURL,
     withCredentials: true
 })
 
-instance.interceptors.request.use( (config) => {
-    const at = localStorage.getItem('token')
-    config.headers.Authorization = `Bearer ${at}`
-    return config
-})
+const refreshTokens = async () => {
+    await instance.get('auth/refresh')
+}
 
-instance.interceptors.response.use( (config) => config,
-    async (error) => {
-        const originalRequest = error.config
-        console.log('error ' + error.toString())
-        if (error?.response?.status == 401 && !error?.config?._isRetry){
-            originalRequest._isRetry = true
+
+const handleRequest = async <T>(request: RequestFunc): Promise<AxiosResponse<T>> => {
+    try {
+        return await request()
+    }
+    catch (error) {
+        if (error?.response?.status === StatusCode.Unauthorized){
+            await refreshTokens()
             try {
-                let response = await axios.get< ILoginResponse >('/auth/refresh')
-                localStorage.setItem('token', response.data?.access_token)
-                return instance.request(originalRequest)
+                return await request()
             }
-            catch (e) {
-                console.log('Не авторизован')
+            catch (innerError) {
+                console.log('Ошибка при обновлении токена ' + innerError?.message)
             }
-        }
-        throw error
-    })
 
+            console.log('Bad Request: ' + error)
+        }
+    }
+}
+
+export const fetcher = async <T>(request: RequestFunc): Promise<QueryResponse<T>> => {
+    try {
+        const res = await handleRequest<T>(request)
+        console.log(res.data)
+        return [null, res.data]
+    }
+    catch (e) {
+        return [e, null]
+    }
+
+
+}
 

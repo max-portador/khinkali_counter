@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {instanceSSR} from "../../../api/baseApi";
 import {ILoginResponse} from "../../../api/authApi";
+import {instanceSSR} from "../../../api/fetcherSSR";
 
 export default async function handler(
     req: NextApiRequest,
@@ -8,7 +8,9 @@ export default async function handler(
 ) {
     console.log('SSR REFRESH')
     try {
-        let backendRes = await instanceSSR.get<ILoginResponse>('auth/refresh')
+        let backendRes = await instanceSSR.get<ILoginResponse>('auth/refresh', {
+            headers: { cookie: req.headers.cookie}
+        })
         res.status(200).json(backendRes.data)
     }
     catch (error) {

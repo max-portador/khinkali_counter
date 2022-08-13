@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { instanceSSR } from "../../../api/baseApi";
+import {instanceSSR} from "../../../api/fetcherSSR";
 
 
 export default async function handler(

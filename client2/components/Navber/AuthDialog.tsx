@@ -2,8 +2,10 @@ import React, {useEffect, useState} from 'react';
 import * as yup from 'yup';
 import {Button, Dialog, Grid, TextField, Typography} from "@mui/material";
 import {useTypedSelectors} from "../../hooks/useTypedSelectors";
+import {shallowEqual, useSelector} from 'react-redux'
 import {useActions} from "../../hooks/useActions";
 import {useFormik} from "formik";
+import {RootState} from "../../store";
 
 const validationSchema = yup.object({
     email: yup
@@ -17,9 +19,10 @@ const validationSchema = yup.object({
 
 
 const AuthDialog = () => {
-    const {user, isAuth} = useTypedSelectors(state => state.auth)
-    const {logout, login} = useActions()
-    const [isOpen, setIsOpen] = useState(isAuth)
+    // const {user, isAuth} = useTypedSelectors(state => state.auth, shallowEqual)
+    const {login, logout} = useActions()
+    const {user, isAuth} = useSelector( (state: RootState) => state.auth)
+    const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
         if (isAuth) {
@@ -35,7 +38,7 @@ const AuthDialog = () => {
         validationSchema: validationSchema,
         onSubmit: async (values: Values, formikHelpers) => {
             const {email, password} = values
-            await login(email, password)
+            login( {email, password})
 
             if (!isAuth) {
                 formikHelpers.setSubmitting(false)
@@ -86,27 +89,31 @@ const AuthDialog = () => {
                 </form>
             </Dialog>
 
-            {isAuth
-                ? <Grid container alignSelf='center' alignItems='center' justifyContent='end'>
-                    <Typography
-                        sx={{
-                            right: 280,
-                            position: 'fixed',
-                            textDecoration: 'hasDunderPages'
-                        }}>
-                        {user.name}
-                    </Typography>
-                    <AuthButton label={'Logout'} onClick={() => {
-                        logout(user)
-                    }}/>
-                </Grid>
-
-                : <AuthButton label={'Login'} onClick={() => {
-                    setIsOpen(true)
+            <>
+                {
+                    isAuth && <Grid container alignSelf='center' alignItems='center' justifyContent='end'>
+                        <Typography
+                            sx={{
+                                right: 280,
+                                position: 'fixed',
+                                textDecoration: 'hasDunderPages'
+                            }}>
+                            Пользователь {user.name}
+                        </Typography>
+                        <AuthButton label={'Logout'} onClick={() => {
+                            logout({user})
+                        }}/>
+                    </Grid>
                 }
-                }/>
 
-            }
+                {
+                    !isAuth && <AuthButton label={'Login'} onClick={() => {
+                        setIsOpen(true)
+                    }
+                    }/>
+                }
+            </>
+
         </>
     )
 };
