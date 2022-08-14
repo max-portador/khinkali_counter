@@ -15,7 +15,7 @@ export const addMinAmount = (acc: AccType, event: IEvent, i: number, arr: IEvent
 export const preparedEvents = (events: IEvent[], reverse=false): ModifiedEvent[] => {
     if (events.length === 0) return []
 
-    return events
+    return [...events]
         .sort(sortEventByDate)
         .reduce(addMinAmount, {minAmount: 1, events: []})
         .events

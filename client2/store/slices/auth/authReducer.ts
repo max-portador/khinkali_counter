@@ -18,7 +18,7 @@ export const authSlice = createSlice({
         setUser: (state, action: PayloadAction<IUserDetail>) => {
             state.isLoading = false;
             state.user = action.payload;
-            state.isAuth = false
+            state.isAuth = true
         },
 
         clearUser: (state) => {
@@ -53,11 +53,6 @@ export const authSlice = createSlice({
             state.isLoading = true
         },
 
-        [logout.rejected.type]: (state) => {
-            state.isLoading = false;
-            state.isAuth = false;
-            state.user = null
-        },
     }
 })
 

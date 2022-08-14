@@ -9,10 +9,10 @@ export const authApi = {
 
             let request = () => instance.post( 'auth/login', {email, password})
 
-            const [errors, user] = await fetcher<IUserDetail>(request)
+            const [errors, data] = await fetcher<{user: IUserDetail}>(request)
 
-            if (!errors && user) {
-                return user
+            if (!errors && data) {
+                return data.user
             }
             else {
                 throw errors
@@ -26,7 +26,7 @@ export const authApi = {
     logout: async (user: IUserDetail): Promise<boolean> => {
         try {
             const response = await instance.post<boolean>('/auth/logout', {
-                userId: user.id
+                user
             })
             const data = await response.data
             if (data) {

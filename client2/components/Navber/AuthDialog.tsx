@@ -19,9 +19,8 @@ const validationSchema = yup.object({
 
 
 const AuthDialog = () => {
-    // const {user, isAuth} = useTypedSelectors(state => state.auth, shallowEqual)
+    const {user, isAuth} = useTypedSelectors(state => state.auth, shallowEqual)
     const {login, logout} = useActions()
-    const {user, isAuth} = useSelector( (state: RootState) => state.auth)
     const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {

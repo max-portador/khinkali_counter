@@ -76,20 +76,20 @@ const EventList = () => {
 
 export default EventList;
 
-// export const getServerSideProps = wrapper.getServerSideProps(store => async ({req, res}) => {
-//     const dispatch = store.dispatch as NextThunkDispatch
-//
-//     try {
-//         let events = await eventsAPI.fetchEventsSSR(req, res)
-//         if (events?.length ) {
-//             dispatch(eventsSlice.actions.setEvents(events))
-//         }
-//
-//     } catch (e) {
-//         console.log(e?.message)
-//     }
-//     return null
-// })
+export const getServerSideProps = wrapper.getServerSideProps(store => async ({req, res}) => {
+    const dispatch = store.dispatch as NextThunkDispatch
+
+    try {
+        let events = await eventsAPI.fetchEventsSSR(req, res)
+        if (events?.length ) {
+            dispatch(eventsSlice.actions.setEvents(events))
+        }
+
+    } catch (e) {
+        console.log(e?.message)
+    }
+    return null
+})
 
 const AddButton = styled((props) => <Button size='small' variant={'contained'}
                                             {...props} startIcon={<AddCircleIcon/>}/>)`
