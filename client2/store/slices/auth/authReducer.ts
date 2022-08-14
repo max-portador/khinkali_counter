@@ -1,6 +1,6 @@
 import {IUserDetail} from "../../../types/user";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {login, logout} from "./actionCreators";
+import {getMe, login, logout} from "./actionCreators";
 
 const initialState = {
     user: {
@@ -51,6 +51,19 @@ export const authSlice = createSlice({
 
         [logout.pending.type]: (state) => {
             state.isLoading = true
+        },
+
+        [getMe.fulfilled.type]:(state, action: PayloadAction<IUserDetail>) => {
+            state.isLoading = false;
+            state.isAuth = true;
+            state.user = action.payload
+        },
+
+
+        [getMe.rejected.type]:(state) => {
+            state.isLoading = false;
+            state.isAuth = false;
+            state.user = initialState.user
         },
 
     }

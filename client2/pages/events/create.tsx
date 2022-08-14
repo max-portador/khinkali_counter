@@ -1,32 +1,25 @@
 import React, {useState} from 'react';
 import MainLayout from "../../layout/MainLayout";
-import {Button, Stack, TextField} from "@mui/material";
+import {Button, Stack} from "@mui/material";
 import styled from "styled-components";
 import DropArea from "../../components/DropArea";
-import {StatusCode} from "../../types/req_res";
 import {Notification} from "../../components/Notification";
-import StyledDatePicker from "../../components/StyledDatePicker";
-import ImgUrlDialog from "../../components/ImgURLDialog";
 import {useActions} from "../../hooks/useActions";
 import {createFileFromURL} from "../../utils/helpers";
+import FormTop from "../../components/CreateEvent/FormTop";
+import {useTypedSelectors} from "../../hooks/useTypedSelectors";
 
 const CreateEvent = () => {
 
     const [isPosting, setIsPosting] = useState(false);
     const {createEvent} = useActions();
+    const {isAuth} = useTypedSelectors(state => state.auth)
 
     const [eventDate, setEventDate] = useState<Date>(new Date());
     const [amount, setAmount] = useState<number>(1)
     const [picture, setPicture] = useState<Blob | null>(null)
 
     const [alertIsOpen, setAlertIsOpen] = React.useState(false);
-    const [isOpenURL, setIsOpenURL] = React.useState(false);
-    const [status, setStatus] = useState<number | null>(null)
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = Number(e.target.value)
-        setAmount(val < 1 ? 1 : val)
-    }
 
     const createFormData = async (): Promise<FormData> => {
         const formData = new FormData()
@@ -46,16 +39,12 @@ const CreateEvent = () => {
 
     const onSubmit = async () => {
         const formData = await createFormData();
-
         setIsPosting(true)
 
-        let event = await createEvent(formData)
+        await createEvent({formData})
 
-        if (event) {
-            setStatus(StatusCode.OK)
+        if (isAuth) {
             setPicture(null)
-        } else {
-            setStatus(500)
         }
 
         setIsPosting(false)
@@ -65,27 +54,15 @@ const CreateEvent = () => {
     return (
         <MainLayout>
             <Form direction={"column"} spacing={2}>
-                    <CenteredStack direction={'row'} spacing={3}>
-
-                        <TextField
-                            value={amount}
-                            type='number'
-                            onChange={handleChange}
-                            variant="outlined"
-                            label="Количество хинкалей"
-                            color="primary"
-                        />
-
-                        <Button variant={'outlined'} onClick={()=> setIsOpenURL(true)}>
-                            Загрузить изображение по ссылке из Twitter
-                        </Button>
-                        <ImgUrlDialog isOpen={isOpenURL} setIsOpen={setIsOpenURL} setFile={setPicture}/>
-
-                        <StyledDatePicker eventDate={eventDate} setEventDate={setEventDate}/>
-                    </CenteredStack>
+                <FormTop amount={amount}
+                         setAmount={setAmount}
+                         eventDate={eventDate}
+                         setEventDate={setEventDate}
+                         setPicture={setPicture}
+                />
                 <DropArea picture={picture} setPicture={setPicture}/>
                 <SubmitButton disabled={!picture && !isPosting} onClick={onSubmit}>Отправить</SubmitButton>
-                <Notification status={status} alertIsOpen={alertIsOpen} setAlertIsOpen={setAlertIsOpen}/>
+                {alertIsOpen && <Notification setAlertIsOpen={setAlertIsOpen}/> }
             </Form>
         </MainLayout>
     );
@@ -106,7 +83,6 @@ export const CenteredStack = styled(Stack)`
   align-content: center;
   justify-content: center;
   text-align: center;
-  
 `
 
 const SubmitButton = styled((props) => <Button variant={"contained"} {...props}/>)`

@@ -1,10 +1,12 @@
 import React, {FC} from 'react';
 import {Dialog, Grid, Typography} from "@mui/material";
-import {ModifiedEvent} from "../types/event";
-import {CancelCornerIcon, DeleteButton} from "./common/styled";
-import {useActions} from "../hooks/useActions";
+import {ModifiedEvent} from "../../types/event";
+import {CancelCornerIcon, DeleteButton} from "../common/styled";
+import {useActions} from "../../hooks/useActions";
+import {Notification} from "../Notification";
 
 const DeleteDialog: FC<PropsType> = ({event, isOpen, setIsOpen}) => {
+    const [alertIsOpen, setAlertIsOpen] = React.useState(false);
     const {deleteEvent} = useActions()
 
     const closeDialog = () => {
@@ -12,8 +14,9 @@ const DeleteDialog: FC<PropsType> = ({event, isOpen, setIsOpen}) => {
     };
 
     const removeEvent = () => {
-        deleteEvent(event._id);
+        deleteEvent({id: event._id })
         closeDialog();
+        setAlertIsOpen(true)
     }
 
     return (
@@ -35,6 +38,7 @@ const DeleteDialog: FC<PropsType> = ({event, isOpen, setIsOpen}) => {
                     </DeleteButton>
                 </Grid>
             </Dialog>
+            {alertIsOpen && <Notification setAlertIsOpen={setAlertIsOpen}/> }
         </div>
     );
 };

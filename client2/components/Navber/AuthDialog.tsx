@@ -2,10 +2,9 @@ import React, {useEffect, useState} from 'react';
 import * as yup from 'yup';
 import {Button, Dialog, Grid, TextField, Typography} from "@mui/material";
 import {useTypedSelectors} from "../../hooks/useTypedSelectors";
-import {shallowEqual, useSelector} from 'react-redux'
+import {shallowEqual} from 'react-redux'
 import {useActions} from "../../hooks/useActions";
 import {useFormik} from "formik";
-import {RootState} from "../../store";
 
 const validationSchema = yup.object({
     email: yup
@@ -13,7 +12,7 @@ const validationSchema = yup.object({
         .required('Email is required'),
     password: yup
         .string()
-        .min(6, 'Password should be of minimum 6 characters length')
+        .min(4, 'Password should be of minimum 4 characters length')
         .required('Password is required'),
 });
 
@@ -67,7 +66,6 @@ const AuthDialog = () => {
                             label="Email"
                             value={formik.values.email}
                             onChange={formik.handleChange}
-                            error={formik.touched.email && Boolean(formik.errors.email)}
                             helperText={formik.touched.email && formik.errors.email}
                         />
                         <TextField
@@ -78,7 +76,6 @@ const AuthDialog = () => {
                             type="password"
                             value={formik.values.password}
                             onChange={formik.handleChange}
-                            error={formik.touched.password && Boolean(formik.errors.password)}
                             helperText={formik.touched.password && formik.errors.password}
                         />
                         <Button variant='contained' type="submit">

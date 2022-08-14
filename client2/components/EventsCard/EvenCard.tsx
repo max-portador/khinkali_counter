@@ -1,10 +1,10 @@
 import React, {FC, useState} from 'react';
-import {ModifiedEvent} from "../types/event";
+import {ModifiedEvent} from "../../types/event";
 import {Button, Grid, Stack, Typography} from "@mui/material";
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
-import {serverURL} from "../api/baseApi";
-import {CardOptions, formatDate} from "../utils/dateHelper";
-import {DeleteButton, StyledCard, StyledImage} from "./common/styled";
+import {serverURL} from "../../api/baseApi";
+import {CardOptions, formatDate} from "../../utils/dateHelper";
+import {DeleteButton, StyledCard, StyledImage} from "../common/styled";
 import EditDialog from "./EditDialog";
 import DeleteDialog from "./DeleteDialog";
 

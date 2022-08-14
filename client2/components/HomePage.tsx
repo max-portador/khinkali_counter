@@ -2,13 +2,12 @@ import React, {FC, useState} from 'react';
 import Timeline from "./TimeLine/Timeline";
 import ImageGallery from "./ImageGallery";
 import {useTypedSelectors} from "../hooks/useTypedSelectors";
-import {preparedEvents} from "../utils/events";
 import {Stack} from "@mui/material";
 
 
 const HomePage: FC = () => {
     const {events} = useTypedSelectors(state => state.event)
-    const modifiedEvents = preparedEvents(events).reverse()
+    const modifiedEvents = [...events].reverse()
 
     const [[activeEvent, direction], setEvent] = useState<[number, number]>([0, 0])
 

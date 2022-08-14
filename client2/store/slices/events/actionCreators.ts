@@ -19,7 +19,7 @@ export const createEvent = createAsyncThunk(
         try {
             return await eventsAPI.create(formData)
         } catch (e) {
-            return thunkAPI.rejectWithValue('Не удалось создать события')
+            return thunkAPI.rejectWithValue(e.message)
         }
     }
 )
@@ -31,7 +31,7 @@ export const updateEvent = createAsyncThunk(
         try {
             return await eventsAPI.update(formData)
         } catch (e) {
-            return thunkAPI.rejectWithValue('Не удалось обновить события')
+            return thunkAPI.rejectWithValue(e.message)
         }
     }
 )

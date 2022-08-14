@@ -2,12 +2,10 @@ import React from 'react';
 import HomePage from "../components/HomePage";
 import MainLayout from "../layout/MainLayout";
 import {NextThunkDispatch, wrapper} from "../store";
-import {useActions} from "../hooks/useActions";
 import {eventsAPI} from "../api/eventsApi";
-import {IUserDetail} from "../types/user";
-import {fetcherSSR} from "../api/fetcherSSR";
 import {authSlice} from "../store/slices/auth/authReducer";
 import {eventsSlice} from "../store/slices/events/eventsReducer";
+import {authApi} from "../api/authApi";
 
 const Index = () => {
 
@@ -29,15 +27,17 @@ export const getServerSideProps = wrapper.getServerSideProps(
             if (events?.length ) {
                 dispatch(eventsSlice.actions.setEvents(events))
             }
+        } catch (fetchEventError) {
+            console.log(fetchEventError?.message)
+        }
 
+        try {
             if (!store.getState().auth.user?.name) {
-                let [errors, user] = await fetcherSSR.get<IUserDetail>(req, res, 'auth/me')
-                if (!errors && user)
-                    dispatch(authSlice.actions.setUser(user))
+                const user = await authApi.meSSR(req, res)
+                dispatch(authSlice.actions.setUser(user))
             }
-
-        } catch (e) {
-            console.log(e?.message)
+        } catch (getUserError) {
+            console.log(getUserError?.message)
         }
 
         return null

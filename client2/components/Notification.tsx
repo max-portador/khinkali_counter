@@ -1,17 +1,32 @@
 import React, {FC, useEffect, useState} from "react";
-import {StatusCode} from "../types/req_res";
 import {Alert, Slide, SlideProps, Snackbar} from "@mui/material";
+import {useTypedSelectors} from "../hooks/useTypedSelectors";
+import {useActions} from "../hooks/useActions";
 
 
-export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen, status}) => {
+export const Notification: FC<NotificationProps> = ({setAlertIsOpen}) => {
     const [alertProps, setAlertProps]
-        = useState<AlertPropsType>({severity: AlertSeverity.SUCSESS, message: AlertMessage.SUCSESS})
+        = useState<AlertPropsType>({severity: AlertSeverity.SUCCESS, message: AlertMessage.SUCCESS})
+
+    const {isAuth, errors} = useTypedSelectors(state => ({
+        isAuth: state.auth.isAuth,
+        errors: state.event.errors
+    }))
+
+    const {clearErrors} = useActions();
 
     useEffect(() => {
-        if (status === StatusCode.OK) {
+        if (!isAuth) {
             setAlertProps({
-                severity: AlertSeverity.SUCSESS,
-                message: AlertMessage.SUCSESS
+                severity: AlertSeverity.ERROR,
+                message: AlertMessage.Unauthorized
+            })
+
+        }
+        else if(errors.length === 0) {
+            setAlertProps({
+                severity: AlertSeverity.SUCCESS,
+                message: AlertMessage.SUCCESS
             })
         } else {
             setAlertProps({
@@ -19,7 +34,8 @@ export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen
                 message: AlertMessage.ERROR
             })
         }
-    }, [status])
+        clearErrors()
+    }, [])
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
         if (reason === 'clickaway') {
@@ -32,7 +48,7 @@ export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen
     return <>
         <Snackbar anchorOrigin={{vertical:'top', horizontal: 'right'}}
                   TransitionComponent={TransitionUp}
-                  open={alertIsOpen}
+                  open={true}
                   autoHideDuration={6000}
                   onClose={handleClose}>
                     <Alert severity={alertProps.severity}
@@ -41,7 +57,7 @@ export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen
                         borderWidth: '1px',
                         borderStyle: 'solid',
                         marginTop: "3vh",
-                        borderColor: alertProps.severity === AlertSeverity.SUCSESS ? 'darkgreen' : 'darkred'
+                        borderColor: alertProps.severity === AlertSeverity.SUCCESS ? 'darkgreen' : 'darkred'
                     }}
                     >
                         {alertProps.message}
@@ -52,9 +68,7 @@ export const Notification: FC<NotificationProps> = ({alertIsOpen, setAlertIsOpen
 
 
 type NotificationProps = {
-    alertIsOpen: boolean,
     setAlertIsOpen: Function,
-    status: number
 }
 
 type AlertPropsType = {
@@ -63,13 +77,14 @@ type AlertPropsType = {
 }
 
 enum AlertSeverity {
-    'SUCSESS' = "success",
-    "ERROR" = "error"
+    'SUCCESS' = "success",
+    'ERROR' = "error"
 }
 
 enum AlertMessage {
-    'SUCSESS' = "Событие успешно сохранено",
-    "ERROR" = "Произошла ошибка во время сохранения события"
+    'SUCCESS' = "Событие успешно сохранено",
+    'ERROR' = "Произошла ошибка во время сохранения события",
+    'Unauthorized' = "Для данного действия требуется авторизация"
 }
 
 

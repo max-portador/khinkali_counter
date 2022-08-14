@@ -38,9 +38,9 @@ export const authApi = {
         }
     },
 
-    me: async (req, res): Promise<IUserDetail> => {
+    meSSR: async (req, res): Promise<IUserDetail> => {
         try {
-            let [errors, user] = await fetcherSSR.get<IUserDetail>(req, res, 'auth/me')
+            let [errors, user] = await fetcherSSR.post<IUserDetail>(req, res, 'auth/me', undefined)
             if (!errors && user){
                 return user
             }
@@ -48,6 +48,20 @@ export const authApi = {
 
         } catch (e) {
             console.log(e.response?.data?.message)
+        }
+    },
+
+    me: async (): Promise<IUserDetail> => {
+        try{
+            let response = await instance.post<IUserDetail>('auth/refresh')
+            let user = response.data
+            if (user.name) {
+                return user
+            }
+            else throw new Error()
+        }
+        catch (e) {
+            throw e
         }
     }
 

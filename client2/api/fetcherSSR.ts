@@ -11,7 +11,7 @@ export const instanceSSR = axios.create({
 })
 
 const refreshTokens = async (req: IncomingMessage, res: ServerResponse) => {
-    const response = await instanceSSR.get<ILoginResponse>(`auth/refresh`, {
+    const response = await instanceSSR.post<ILoginResponse>(`auth/refresh`, undefined, {
         headers: {
             cookie: req.headers.cookie || ''
         },
@@ -32,12 +32,13 @@ const handleRequest = async (req: IncomingMessage, res: ServerResponse, request:
                 await refreshTokens(req, res)
                 return await request()
             } catch (innerError) {
-                console.log('Ошибка при обновлении токена ' + innerError?.message)
-                throw innerError
+                return innerError
             }
         }
-        console.log('Bad Request: ' + error)
-        throw error
+        else {
+            return  error
+        }
+
     }
 }
 export const fetcherSSR = {

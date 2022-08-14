@@ -12,11 +12,23 @@ export const login = createAsyncThunk(
         }
     }
 )
+
 export const logout = createAsyncThunk(
     'auth/logout',
     async ({user}: { user: IUserDetail }, thunkAPI) => {
         try {
             return await authApi.logout(user)
+        } catch (e) {
+            return thunkAPI.rejectWithValue('Ошибка во время выхода из акаунта')
+        }
+    }
+)
+
+export const getMe = createAsyncThunk(
+    'auth/me',
+    async (_, thunkAPI) => {
+        try {
+            return await authApi.me()
         } catch (e) {
             return thunkAPI.rejectWithValue('Ошибка во время выхода из акаунта')
         }

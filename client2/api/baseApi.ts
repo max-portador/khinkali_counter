@@ -11,7 +11,7 @@ export const instance = axios.create({
 })
 
 const refreshTokens = async () => {
-    await instance.get('auth/refresh')
+    await instance.post('auth/refresh')
 }
 
 
@@ -27,17 +27,18 @@ const handleRequest = async <T>(request: RequestFunc): Promise<AxiosResponse<T>>
             }
             catch (innerError) {
                 console.log('Ошибка при обновлении токена ' + innerError?.message)
+                throw innerError
             }
 
-            console.log('Bad Request: ' + error)
         }
+        console.log('Bad Request: ' + error)
+        throw error
     }
 }
 
 export const fetcher = async <T>(request: RequestFunc): Promise<QueryResponse<T>> => {
     try {
         const res = await handleRequest<T>(request)
-        console.log(res.data)
         return [null, res.data]
     }
     catch (e) {
